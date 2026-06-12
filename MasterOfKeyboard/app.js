@@ -79,6 +79,7 @@ let tutorial = freshTutorialSession(tutorialStages[tutorialIndex].text);
 let speed = freshSession(speedTexts[0]);
 let speedDuration = 30;
 let speedTimer = null;
+let activeGameMode = localStorage.getItem("mok-game-mode") || "rain";
 let game = freshGameState(false);
 let soundOn = localStorage.getItem("mok-sound") !== "off";
 let audioContext;
@@ -114,6 +115,8 @@ function init() {
   buildKeyboards();
   buildLessonTrack();
   buildLegend();
+  renderGameLibrary();
+  selectGameMode(activeGameMode, false);
   renderPractice();
   renderTutorial();
   resetSpeed();
@@ -451,22 +454,98 @@ function speedResultCopy(metrics, chars) {
 
 const gameLevelNames = ["Rząd podstawowy", "Obie dłonie", "Górny rząd", "Cała klawiatura", "Szybkie pary", "Refleks", "Płynność", "Turbo", "Ekspert", "Mistrz"];
 const gameLevelSets = ["asdfjkl", "asdfghjkl", "asdfjklqwertyuiop", "abcdefghijklmnopqrstuvwxyz"];
+const arcadeWords = ["las", "dom", "rytm", "klasa", "palce", "tempo", "ekran", "nauka", "klawisz", "dokładność", "spokojnie", "mistrz"];
+const arcadePhrases = [
+  "piszę bez patrzenia", "palce wracają na bazę", "dokładność buduje tempo",
+  "spokojny rytm daje pewność", "każdy klawisz ma swój palec", "trening czyni mistrza"
+];
+const polishChars = "ąćęłńóśźż";
+const arcadeModes = [
+  { id: "rain", number: 1, title: "Deszcz liter", short: "Refleks i palce", color: "#64b5f6", description: "Naciśnij literę, zanim jej kafelek przekroczy czerwoną linię.", intro: "Łap litery palcami", instruction: "Zaczynamy bardzo wolno. Gra dopasuje tempo do Twojej szybkości i dokładności.", type: "falling" },
+  { id: "balloons", number: 2, title: "Baloniki liter", short: "Celność pod presją", color: "#ff91c8", description: "Przebijaj unoszące się litery, zanim odlecą ponad linię.", intro: "Nie pozwól im odlecieć", instruction: "Najbliższy górnej linii balonik pulsuje. Wciśnij jego literę właściwym palcem.", type: "falling" },
+  { id: "race", number: 4, title: "Wyścig słów", short: "Płynne frazy", color: "#62dbb5", description: "Pisz frazy bez zatrzymywania, aby przesuwać znacznik do mety.", intro: "Dojedź do mety", instruction: "Każdy poprawny znak przesuwa Cię naprzód. Błędy kosztują życie.", type: "target" },
+  { id: "builder", number: 5, title: "Budowniczy słów", short: "Łączenie liter", color: "#f5c96a", description: "Buduj kolejne słowa znak po znaku i utrzymuj serię.", intro: "Zbuduj słowo", instruction: "Pisz podświetlane litery po kolei. Co trzy słowa wejdziesz na wyższy poziom.", type: "target" },
+  { id: "memory", number: 6, title: "Pamięć palców", short: "Pamięć mięśniowa", color: "#9d91ff", description: "Zapamiętaj krótką sekwencję, a potem odtwórz ją bez podpowiedzi.", intro: "Zapamiętaj i odtwórz", instruction: "Sekwencja za chwilę zniknie. Wtedy wpisz ją z pamięci.", type: "target" },
+  { id: "accents", number: 7, title: "Polskie znaki", short: "Ą Ć Ę Ł Ń Ó Ś Ź Ż", color: "#ff7a68", description: "Trenuj polskie znaki i skróty potrzebne do ich wpisywania.", intro: "Oswój polskie znaki", instruction: "Wpisuj wskazane znaki. Na Windows używaj prawego Alt, a na macOS klawisza Option.", type: "target" },
+  { id: "rhythm", number: 8, title: "Rytm klawiatury", short: "Równe tempo", color: "#e8ff47", description: "Utrzymuj serię i wpisuj znaki w pulsującym rytmie.", intro: "Złap równy rytm", instruction: "Nie śpiesz się. Pisz kolejne znaki zgodnie z pulsem planszy.", type: "target", duration: 35 },
+  { id: "marathon", number: 10, title: "Mistrzowski maraton", short: "Wszystkie umiejętności", color: "#ff36c8", description: "Finałowa próba łączy litery, słowa, polskie znaki i presję czasu.", intro: "Pokaż pełną kontrolę", instruction: "Masz 45 sekund i trzy życia. Pisz dokładnie, aby zdobyć jak najwięcej punktów.", type: "target", duration: 45 }
+];
+
+function currentGameMode() {
+  return arcadeModes.find(mode => mode.id === activeGameMode) || arcadeModes[0];
+}
 
 function freshGameState(running = true) {
-  return { running, score: 0, lives: 3, level: 1, levelHits: 0, hits: 0, misses: 0, combo: 0, pace: .32, targetPace: .32, items: [], activeTarget: null, lastSpawn: 0, lastFrame: 0, raf: null };
+  return {
+    running, mode: activeGameMode, score: 0, lives: 3, level: 1, levelHits: 0, hits: 0, misses: 0,
+    combo: 0, bestCombo: 0, pace: .32, targetPace: .32, items: [], activeTarget: null, lastSpawn: 0, lastFrame: 0,
+    raf: null, timer: null, roundTimer: null, memoryTimer: null, target: "", index: 0, rounds: 0,
+    timeLeft: 0, memoryVisible: false
+  };
+}
+
+function renderGameLibrary() {
+  document.getElementById("game-library").innerHTML = arcadeModes.map(mode => `
+    <button class="game-mode-card ${mode.id === activeGameMode ? "active" : ""}" data-game-mode="${mode.id}" style="--mode-color:${mode.color}">
+      <b>${mode.number}</b><span><strong>${mode.title}</strong><small>${mode.short}</small></span>
+    </button>`).join("");
+}
+
+function selectGameMode(modeId, announce = true) {
+  const mode = arcadeModes.find(item => item.id === modeId) || arcadeModes[0];
+  stopCurrentGame();
+  cleanGameStage();
+  activeGameMode = mode.id;
+  localStorage.setItem("mok-game-mode", mode.id);
+  game = freshGameState(false);
+  document.getElementById("game-stage").dataset.mode = mode.id;
+  setText("game-title", mode.title);
+  setText("game-description", mode.description);
+  setText("game-hint-label", mode.type === "falling" ? "Najbliższa litera" : "Następny znak");
+  document.querySelectorAll("[data-game-mode]").forEach(button => button.classList.toggle("active", button.dataset.gameMode === mode.id));
+  const overlay = document.getElementById("game-overlay");
+  overlay.classList.remove("hidden");
+  overlay.querySelector(".game-kicker").textContent = `GRA ${mode.number}`;
+  overlay.querySelector("h2").textContent = mode.intro;
+  overlay.querySelector("p").textContent = mode.instruction;
+  document.getElementById("start-game").textContent = "Rozpocznij grę";
+  document.getElementById("arcade-target").innerHTML = "";
+  setText("arcade-helper", mode.type === "target" ? mode.instruction : "");
+  setText("game-finger", "Czekam na start");
+  highlightExpected("");
+  highlightFinger("");
+  updateGameHud();
+  if (announce) showToast(`Wybrano: ${mode.title}`);
+}
+
+function stopCurrentGame() {
+  if (!game) return;
+  game.running = false;
+  cancelAnimationFrame(game.raf);
+  clearInterval(game.timer);
+  clearTimeout(game.roundTimer);
+  clearTimeout(game.memoryTimer);
+}
+
+function cleanGameStage() {
+  document.querySelectorAll("#game-stage .fall-key, #game-stage .mistake-bubble").forEach(item => item.remove());
 }
 
 function startGame() {
-  game.items.forEach(item => item.el.remove());
+  stopCurrentGame();
+  cleanGameStage();
   game = freshGameState(true);
   game.lastSpawn = performance.now() - 1700;
   document.getElementById("game-overlay").classList.add("hidden");
+  document.getElementById("start-game").textContent = "Zagraj ponownie";
   updateGameHud();
-  game.raf = requestAnimationFrame(gameLoop);
+  if (currentGameMode().type === "falling") game.raf = requestAnimationFrame(gameLoop);
+  else startArcadeMode();
 }
 
 function gameLoop(now) {
   if (!game.running) return;
+  const mode = currentGameMode();
   const stage = document.getElementById("game-stage");
   const frameScale = game.lastFrame ? Math.min(2, (now - game.lastFrame) / 16.67) : 1;
   game.lastFrame = now;
@@ -478,10 +557,11 @@ function gameLoop(now) {
   }
   const lineY = stage.clientHeight - 66;
   game.items.slice().forEach(item => {
-    item.y += item.speed * game.pace * frameScale;
-    const growth = 1 + Math.min(.38, item.y / Math.max(1, lineY) * .38) + (item === game.activeTarget ? .12 : 0);
+    item.y += item.speed * game.pace * frameScale * item.direction;
+    const progressToLine = mode.id === "balloons" ? (lineY - item.y) / Math.max(1, lineY) : item.y / Math.max(1, lineY);
+    const growth = 1 + Math.min(.38, Math.max(0, progressToLine) * .38) + (item === game.activeTarget ? .12 : 0);
     item.el.style.transform = `translateY(${item.y}px) rotate(${Math.sin(item.y / 35) * 3}deg) scale(${growth})`;
-    if (item.y + 56 >= lineY) missLetter(item);
+    if ((mode.id === "balloons" && item.y <= 76) || (mode.id !== "balloons" && item.y + 56 >= lineY)) missLetter(item);
   });
   updateGameTarget();
   updateSpeedometer();
@@ -489,18 +569,20 @@ function gameLoop(now) {
 }
 
 function spawnLetter(stage) {
+  const mode = currentGameMode();
   const chars = gameLevelSets[Math.min(gameLevelSets.length - 1, Math.floor((game.level - 1) / 2))];
   const char = chars[Math.floor(Math.random() * chars.length)];
   const group = fingerFor(char);
   const el = document.createElement("div");
-  el.className = "fall-key";
+  el.className = `fall-key${mode.id === "balloons" ? " balloon-key" : ""}`;
   el.textContent = char.toUpperCase();
   const startX = stage.clientWidth > 760 ? 360 : 20;
   el.style.left = `${startX + Math.random() * Math.max(10, stage.clientWidth - startX - 76)}px`;
   el.style.top = "4px";
   el.style.setProperty("--fall-color", group.color);
   stage.appendChild(el);
-  game.items.push({ char, el, y: 0, speed: 1.05 + Math.random() * .2 });
+  const balloon = mode.id === "balloons";
+  game.items.push({ char, el, y: balloon ? stage.clientHeight - 90 : 0, speed: 1.05 + Math.random() * .2, direction: balloon ? -1 : 1 });
 }
 
 function hitGameLetter(key) {
@@ -521,6 +603,7 @@ function hitGameLetter(key) {
   game.hits++;
   game.levelHits++;
   game.combo++;
+  game.bestCombo = Math.max(game.bestCombo, game.combo);
   game.score += 10 + game.level * 2 + Math.min(10, game.combo);
   game.targetPace = Math.min(2.35, game.targetPace + .025 + reaction * .035 + Math.min(.025, game.combo * .002));
   removeGameItem(item, "hit");
@@ -548,7 +631,7 @@ function removeGameItem(item, cls) {
 }
 
 function updateGameTarget() {
-  const nextTarget = game.items.slice().sort((a, b) => b.y - a.y)[0] || null;
+  const nextTarget = game.items.slice().sort((a, b) => currentGameMode().id === "balloons" ? a.y - b.y : b.y - a.y)[0] || null;
   if (nextTarget === game.activeTarget) return;
   game.items.forEach(item => item.el.classList.toggle("urgent", item === nextTarget));
   game.activeTarget = nextTarget;
@@ -558,10 +641,114 @@ function updateGameTarget() {
     highlightFinger("");
     return;
   }
-  const group = fingerFor(nextTarget.char);
   setText("game-finger", `${nextTarget.char.toUpperCase()} · ${fingerNameFor(nextTarget.char)}`);
   highlightExpected(nextTarget.char);
   highlightFinger(nextTarget.char);
+}
+
+function startArcadeMode() {
+  const mode = currentGameMode();
+  game.timeLeft = mode.duration || 0;
+  prepareArcadeRound();
+  updateGameHud();
+  if (mode.duration) {
+    game.timer = setInterval(() => {
+      if (!game.running) return;
+      game.timeLeft--;
+      renderArcadeChallenge();
+      updateGameHud();
+      if (game.timeLeft <= 0) endGame();
+    }, 1000);
+  }
+}
+
+function prepareArcadeRound() {
+  if (!game.running) return;
+  const mode = currentGameMode();
+  game.index = 0;
+  game.memoryVisible = mode.id === "memory";
+  if (mode.id === "race") game.target = arcadePhrases[Math.floor(Math.random() * arcadePhrases.length)];
+  else if (mode.id === "builder") game.target = arcadeWords[Math.floor(Math.random() * arcadeWords.length)];
+  else if (mode.id === "memory") {
+    const chars = gameLevelSets[Math.min(3, Math.floor((game.level - 1) / 2))];
+    game.target = Array.from({ length: Math.min(9, 3 + game.level) }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  } else if (mode.id === "accents") {
+    game.target = Array.from({ length: Math.min(12, 5 + game.level) }, () => polishChars[Math.floor(Math.random() * polishChars.length)]).join("");
+  } else if (mode.id === "rhythm") {
+    const chars = gameLevelSets[Math.min(3, Math.floor((game.level - 1) / 2))];
+    game.target = Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  } else {
+    game.target = `${arcadePhrases[Math.floor(Math.random() * arcadePhrases.length)]} ${polishChars[Math.floor(Math.random() * polishChars.length)]}`;
+  }
+  renderArcadeChallenge();
+  if (mode.id === "memory") {
+    game.memoryTimer = setTimeout(() => {
+      game.memoryVisible = false;
+      renderArcadeChallenge();
+    }, Math.max(950, 1900 - game.level * 90));
+  }
+}
+
+function renderArcadeChallenge() {
+  const mode = currentGameMode();
+  const target = document.getElementById("arcade-target");
+  target.className = `arcade-target ${mode.id}-style${mode.id === "memory" && !game.memoryVisible ? " memory-hidden" : ""}`;
+  target.innerHTML = [...game.target].map((char, index) => {
+    const cls = index < game.index ? "done" : index === game.index ? "current" : "";
+    return `<span class="arcade-char ${cls}">${char === " " ? "&nbsp;" : escapeHtml(char)}</span>`;
+  }).join("");
+  setText("arcade-kicker", mode.id === "memory" && game.memoryVisible ? "ZAPAMIĘTAJ SEKWENCJĘ" : mode.id === "race" ? "WYŚCIG DO METY" : mode.duration ? `${game.timeLeft} SEKUND` : `RUNDA ${game.rounds + 1}`);
+  const helper = mode.id === "memory"
+    ? game.memoryVisible ? "Patrz uważnie. Za chwilę sekwencja zniknie." : "Teraz wpisz całą sekwencję z pamięci."
+    : mode.id === "accents" ? "Windows: prawy Alt + litera · macOS: Option + odpowiedni skrót"
+    : mode.id === "rhythm" ? "Utrzymaj równy rytm i nie przerywaj serii."
+    : mode.id === "marathon" ? "Litery, słowa i polskie znaki w jednej próbie."
+    : mode.instruction;
+  setText("arcade-helper", helper);
+  document.getElementById("arcade-runner").style.setProperty("--runner", `${game.target.length ? game.index / game.target.length * 100 : 0}%`);
+  const next = game.target[game.index] || "";
+  const hideHint = mode.id === "memory";
+  setText("game-finger", next && !hideHint ? `${next === " " ? "SPACJA" : next.toUpperCase()} · ${fingerNameFor(next)}` : hideHint ? "Zaufaj pamięci palców" : "Nowa runda");
+  highlightExpected(hideHint ? "" : next);
+  highlightFinger(hideHint ? "" : next);
+}
+
+function handleArcadeKey(key) {
+  if (!game.running || key.length !== 1 || game.memoryVisible) return;
+  const expected = game.target[game.index];
+  const correct = key.toLocaleLowerCase("pl-PL") === expected.toLocaleLowerCase("pl-PL");
+  if (!correct) {
+    game.misses++;
+    game.combo = 0;
+    game.lives--;
+    game.targetPace = Math.max(.28, game.targetPace - .12);
+    showMistakeBubble(key);
+    feedbackSound("wrong");
+    updateGameHud();
+    if (game.lives <= 0) endGame();
+    return;
+  }
+  game.index++;
+  game.hits++;
+  game.levelHits++;
+  game.combo++;
+  game.bestCombo = Math.max(game.bestCombo, game.combo);
+  game.score += 8 + game.level * 2 + Math.min(12, game.combo);
+  game.targetPace = Math.min(2.35, game.targetPace + .035);
+  game.pace += (game.targetPace - game.pace) * .35;
+  feedbackSound("correct");
+  if (game.index >= game.target.length) completeArcadeRound();
+  else renderArcadeChallenge();
+  updateGameHud();
+}
+
+function completeArcadeRound() {
+  game.rounds++;
+  game.score += 30 + game.level * 8;
+  if (game.rounds % 3 === 0 && game.level < 10) levelUpGame();
+  setText("arcade-helper", "Runda ukończona. Przygotuj palce na kolejny cel.");
+  tone(720, .07);
+  game.roundTimer = setTimeout(prepareArcadeRound, 450);
 }
 
 function levelUpGame() {
@@ -593,29 +780,32 @@ function showMistakeBubble(key) {
 }
 
 function endGame() {
-  game.running = false;
-  cancelAnimationFrame(game.raf);
+  stopCurrentGame();
+  const mode = currentGameMode();
   const overlay = document.getElementById("game-overlay");
   overlay.classList.remove("hidden");
   overlay.querySelector(".game-kicker").textContent = "KONIEC GRY";
   overlay.querySelector("h2").textContent = `${game.score} punktów`;
-  overlay.querySelector("p").textContent = `Dotarłeś do poziomu ${game.level} i tempa ${game.pace.toFixed(1)}×. Jeszcze jedna próba?`;
+  overlay.querySelector("p").textContent = `${mode.title}: poziom ${game.level}, ${game.hits} poprawnych znaków i najlepsza seria ${game.bestCombo}. Jeszcze jedna próba?`;
   document.getElementById("start-game").textContent = "Zagraj ponownie";
-  progress.sessions.push({ type: "Gra", wpm: Math.round(game.score / 10), accuracy: Math.max(0, 100 - (3 - game.lives) * 10), date: new Date().toISOString() });
+  const accuracy = game.hits + game.misses ? Math.round(game.hits / (game.hits + game.misses) * 100) : 0;
+  progress.sessions.push({ type: `Gra: ${mode.title}`, wpm: Math.round(game.score / 10), accuracy, date: new Date().toISOString() });
   progress.sessions = progress.sessions.slice(-12);
   saveProgress();
 }
 
 function updateGameHud() {
+  const mode = currentGameMode();
   setText("game-score", game.score);
   setText("game-level", game.level);
   setText("game-level-stage", game.level);
   setText("game-combo", game.combo);
   setText("game-lives", game.lives);
-  setText("game-level-copy", gameLevelNames[game.level - 1]);
-  const levelHits = Math.min(10, game.levelHits);
-  setText("game-level-hits", game.level === 10 ? "Poziom mistrzowski" : `${levelHits} / 10 trafień`);
-  document.getElementById("game-level-progress").style.width = `${levelHits * 10}%`;
+  setText("game-level-copy", mode.type === "falling" ? gameLevelNames[game.level - 1] : mode.short);
+  const levelHits = mode.type === "falling" ? Math.min(10, game.levelHits) : game.target.length ? game.index : 0;
+  const goal = mode.type === "falling" ? 10 : Math.max(1, game.target.length);
+  setText("game-level-hits", mode.duration ? `${game.timeLeft} s · ${game.rounds} rund` : game.level === 10 ? "Poziom mistrzowski" : `${levelHits} / ${goal} znaków`);
+  document.getElementById("game-level-progress").style.width = `${Math.min(100, levelHits / goal * 100)}%`;
   updateSpeedometer();
 }
 
@@ -733,8 +923,7 @@ function codeForChar(char) {
 
 function switchView(name) {
   if (activeView === "game" && name !== "game" && game.running) {
-    game.running = false;
-    cancelAnimationFrame(game.raf);
+    stopCurrentGame();
     const overlay = document.getElementById("game-overlay");
     overlay.classList.remove("hidden");
     overlay.querySelector(".game-kicker").textContent = "GRA WSTRZYMANA";
@@ -790,6 +979,10 @@ function bindEvents() {
   document.getElementById("practice-text").addEventListener("click", e => e.currentTarget.focus());
   document.getElementById("speed-text").addEventListener("click", e => e.currentTarget.focus());
   document.getElementById("start-game").addEventListener("click", startGame);
+  document.getElementById("game-library").addEventListener("click", event => {
+    const button = event.target.closest("[data-game-mode]");
+    if (button) selectGameMode(button.dataset.gameMode);
+  });
   document.getElementById("start-speed").addEventListener("click", () => speed.ended ? resetSpeed() : startSpeed());
   document.querySelectorAll("[data-duration]").forEach(button => button.addEventListener("click", () => {
     speedDuration = Number(button.dataset.duration);
@@ -819,8 +1012,16 @@ function bindEvents() {
     else if (activeView === "tutorial") handleTutorial(event);
     else if (activeView === "speed") handleTyping(event, speed, "speed");
     else if (activeView === "game") {
-      flashKey(event.code, game.items.some(item => item.char === event.key.toLowerCase()));
-      hitGameLetter(event.key);
+      if (!game.running) return;
+      if (event.key === " ") event.preventDefault();
+      const mode = currentGameMode();
+      if (mode.id === "memory" && game.memoryVisible) return;
+      const correct = mode.type === "falling"
+        ? game.items.some(item => item.char === event.key.toLowerCase())
+        : !game.memoryVisible && game.target[game.index]?.toLocaleLowerCase("pl-PL") === event.key.toLocaleLowerCase("pl-PL");
+      if (event.key.length === 1) flashKey(event.code, correct);
+      if (mode.type === "falling") hitGameLetter(event.key);
+      else handleArcadeKey(event.key);
     }
     else flashKey(event.code);
   });

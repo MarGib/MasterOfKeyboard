@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260612-2">
+  <link rel="stylesheet" href="styles.css?v=20260612-3">
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -225,10 +225,13 @@
 
       <section class="view" id="game-view">
         <div class="section-heading game-heading">
-          <div><span class="eyebrow">Salon gier</span><h2>Deszcz liter</h2><p>Naciśnij literę, zanim jej kafelek przekroczy czerwoną linię.</p></div>
+          <div><span class="eyebrow">Salon gier · 8 trybów</span><h2 id="game-title">Deszcz liter</h2><p id="game-description">Naciśnij literę, zanim jej kafelek przekroczy czerwoną linię.</p></div>
           <div class="game-hud"><span>Punkty <strong id="game-score">0</strong></span><span>Poziom <strong id="game-level">1</strong></span><span>Seria <strong id="game-combo">0</strong></span><span>Życia <strong id="game-lives">3</strong></span></div>
         </div>
-        <article class="game-stage" id="game-stage">
+
+        <div class="game-library" id="game-library" aria-label="Wybierz grę"></div>
+
+        <article class="game-stage" id="game-stage" data-mode="rain">
           <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
           <div class="game-grid"></div>
           <div class="game-dashboard">
@@ -246,6 +249,12 @@
               <small id="game-level-hits">0 / 10 trafień</small>
             </div>
           </div>
+          <div class="arcade-challenge" id="arcade-challenge" aria-live="polite">
+            <span class="arcade-kicker" id="arcade-kicker">CEL RUNDY</span>
+            <div class="arcade-target" id="arcade-target"></div>
+            <p id="arcade-helper"></p>
+            <div class="arcade-track"><i id="arcade-runner"></i></div>
+          </div>
           <div class="danger-line"><span>linia końcowa</span></div>
           <div class="level-up-banner" id="level-up-banner"><span>POZIOM</span><strong>2</strong><small>Przyspieszamy!</small></div>
           <div class="game-overlay" id="game-overlay">
@@ -257,7 +266,7 @@
         </article>
         <div class="game-bottom">
           <div class="game-hand-guide">
-            <div><span class="eyebrow">Najbliższa litera</span><strong id="game-finger">Czekam na literę</strong></div>
+            <div><span class="eyebrow" id="game-hint-label">Najbliższa litera</span><strong id="game-finger">Czekam na literę</strong></div>
             <div class="game-hands">
               <div class="hand left-hand">
                 <i class="finger pinky"></i><i class="finger ring"></i><i class="finger middle"></i><i class="finger index"></i><i class="finger thumb"></i>
@@ -337,6 +346,6 @@
   </div>
   <div class="toast" id="toast"></div>
 
-  <script src="app.js?v=20260612-2"></script>
+  <script src="app.js?v=20260612-3"></script>
 </body>
 </html>

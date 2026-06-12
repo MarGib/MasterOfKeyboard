@@ -7,7 +7,9 @@ Interaktywna aplikacja wspomagająca naukę pisania bezwzrokowego.
 - prowadzony samouczek prawidłowego ułożenia dłoni i palców,
 - lekcje pisania od rzędu bazowego do pełnych fraz,
 - podświetlana klawiatura ekranowa i wskazanie właściwego palca,
-- adaptacyjna gra Deszcz liter,
+- salon ośmiu gier: Deszcz liter, Baloniki liter, Wyścig słów,
+  Budowniczy słów, Pamięć palców, Polskie znaki, Rytm klawiatury
+  i Mistrzowski maraton,
 - test szybkości z pomiarem WPM, CPM i dokładności,
 - zapisywanie postępów w przeglądarce,
 - motywy Noc, Zmierzch, Jasny i Neon.
