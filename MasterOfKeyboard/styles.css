@@ -216,8 +216,8 @@ kbd { font-family: Space Grotesk; }
 .game-hud { display: flex; gap: 8px; }
 .game-hud span { display: grid; gap: 3px; min-width: 74px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: 7px; letter-spacing: .1em; text-transform: uppercase; }
 .game-hud strong { color: var(--text); font: 700 17px Space Grotesk; }
-.game-library { display: flex; gap: 8px; margin: -8px 0 12px; padding: 3px 2px 8px; overflow-x: auto; scrollbar-width: thin; }
-.game-mode-card { position: relative; display: grid; grid-template-columns: 28px minmax(94px,1fr); gap: 8px; align-items: center; min-width: 154px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 13px; background: var(--panel); color: var(--muted); cursor: pointer; text-align: left; transition: .2s ease; }
+.game-library { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 8px; margin: -8px 0 12px; padding: 3px 2px 8px; }
+.game-mode-card { position: relative; display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 8px; align-items: center; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 13px; background: var(--panel); color: var(--muted); cursor: pointer; text-align: left; transition: .2s ease; }
 .game-mode-card:hover { color: var(--text); border-color: color-mix(in srgb,var(--mode-color) 40%,var(--line)); transform: translateY(-2px); }
 .game-mode-card.active { color: var(--text); border-color: color-mix(in srgb,var(--mode-color) 65%,var(--line)); background: color-mix(in srgb,var(--mode-color) 9%,var(--panel)); box-shadow: 0 8px 25px color-mix(in srgb,var(--mode-color) 10%,transparent); }
 .game-mode-card > b { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid color-mix(in srgb,var(--mode-color) 40%,var(--line)); border-radius: 9px; background: color-mix(in srgb,var(--mode-color) 12%,transparent); color: var(--mode-color); font: 700 9px Space Grotesk; }
@@ -427,6 +427,10 @@ body[data-theme="neon"] .tutorial-complete { background: #090b15; box-shadow: va
 body[data-theme="neon"] .tutorial-exercise { background: linear-gradient(145deg,#0e1220,#05060c); }
 body[data-theme="neon"] .tutorial-tip-banner { border-color: rgba(232,255,71,.35); box-shadow: 0 0 20px rgba(232,255,71,.035),inset 0 0 20px rgba(232,255,71,.025); }
 
+@media (max-width: 1450px) {
+  .game-library { grid-template-columns: repeat(4,minmax(0,1fr)); }
+}
+
 /* Keep the complete lesson workspace visible at 100% browser zoom. */
 @media (min-width: 1101px) and (max-height: 1150px) {
   .main-content { padding-bottom: 12px; }
@@ -523,7 +527,7 @@ body[data-theme="neon"] .tutorial-tip-banner { border-color: rgba(232,255,71,.35
   #game-view .game-heading h2 { font-size: 25px; }
   #game-view .game-heading p { display: none; }
   #game-view .game-library { margin: 0 0 6px; padding-bottom: 5px; }
-  #game-view .game-mode-card { min-width: 142px; padding: 6px 8px; }
+  #game-view .game-mode-card { padding: 6px 8px; }
   #game-view .game-mode-card > b { width: 24px; height: 24px; }
   #game-view .game-stage { height: calc(100vh - 345px); min-height: 315px; border-radius: 17px; }
   #game-view .game-bottom { gap: 8px; margin-top: 7px; padding: 6px 12px; border-radius: 14px; }
@@ -549,7 +553,7 @@ body[data-theme="neon"] .tutorial-tip-banner { border-color: rgba(232,255,71,.35
   .section-heading { align-items: flex-start; flex-direction: column; }
   .section-heading .ghost-button { display: none; }
   .game-hud { width: 100%; }.game-hud span { flex: 1; min-width: 0; }
-  .game-library { margin-top: -12px; }
+  .game-library { grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: -12px; }
   .speed-layout, .report-grid { grid-template-columns: 1fr; }.speed-stats { grid-template-columns: repeat(3,1fr); }.speed-stats div { padding: 10px; }.speed-stats strong { font-size: 22px; }
   .progress-hero { grid-template-columns: 90px 1fr; }.level-orb { width: 80px; height: 80px; }.best-result { display: none; }
   .tutorial-guide { grid-template-columns: 1fr; }.tutorial-score { display: none; }.tutorial-tip-banner { order: 3; }.tutorial-hands-card { grid-template-columns: 1fr; }.tutorial-posture { display: none; }.tutorial-exercise { grid-template-columns: 100px minmax(0,1fr); }.tutorial-feedback { grid-column: 1 / -1; margin: 0; }.technique-strip { grid-template-columns: repeat(2,1fr); }
@@ -563,7 +567,7 @@ body[data-theme="neon"] .tutorial-tip-banner { border-color: rgba(232,255,71,.35
   .coach-card { display: none; }
   .keyboard-wrap { padding: 12px; }.keyboard-top { margin-bottom: 10px; }
   .game-stage { min-height: 430px; }.game-bottom { grid-template-columns: 1fr; }.game-bottom .keyboard { display: none; }
-  .game-mode-card { min-width: 135px; }.arcade-challenge { inset: 105px 16px 42px; }.arcade-target { font-size: 25px; }
+  .game-mode-card { padding: 7px 8px; }.arcade-challenge { inset: 105px 16px 42px; }.arcade-target { font-size: 25px; }
   .game-dashboard { right: 10px; left: 10px; top: 10px; }.speedometer { min-width: 140px; padding: 6px 8px; }.speedometer-dial { width: 58px; flex-basis: 58px; }.speedometer-needle { left: 29px; width: 22px; }.speedometer-dial b { left: 25px; }.speed-mid{left:27px}.level-meter { min-width: 0; flex: 1; }
   .speed-stats { gap: 6px; }.speed-stats small { display: none; }
   .progress-hero { grid-template-columns: 1fr; }.level-orb { display: none; }
