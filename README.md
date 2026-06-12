@@ -12,6 +12,15 @@ Interaktywna aplikacja wspomagająca naukę pisania bezwzrokowego.
 - zapisywanie postępów w przeglądarce,
 - motywy Noc, Zmierzch, Jasny i Neon.
 
+## Publiczna wersja
+
+Aplikacja jest dostępna pod adresem:
+[https://margib.github.io/MasterOfKeyboard/](https://margib.github.io/MasterOfKeyboard/).
+
+Widoczny w aplikacji licznik jest przybliżony. Zwiększa się tylko raz w danej
+przeglądarce na publicznej stronie dzięki znacznikowi w `localStorage`, bez
+fingerprintingu i zbierania danych osobowych.
+
 ## Uruchomienie lokalne
 
 Aplikacja nie wymaga instalowania zależności. Wystarczy otworzyć

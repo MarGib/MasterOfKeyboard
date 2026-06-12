@@ -83,6 +83,8 @@ let game = freshGameState(false);
 let soundOn = localStorage.getItem("mok-sound") !== "off";
 let audioContext;
 let activeTheme = localStorage.getItem("mok-theme") || "dark";
+const visitorCounterBaseUrl = "https://api.counterapi.dev/v1/master-of-keyboard/unique-users";
+const visitorCountedKey = "mok-public-visitor-counted";
 
 function loadProgress() {
   try { return { ...defaultProgress, ...JSON.parse(localStorage.getItem("mok-progress") || "{}") }; }
@@ -118,6 +120,7 @@ function init() {
   renderProgress();
   bindEvents();
   updateDaily();
+  loadVisitorCount();
   document.getElementById("practice-text").focus();
 }
 
@@ -846,6 +849,33 @@ function updateDaily() {
   setText("daily-percent", `${percent}%`);
   document.querySelector(".daily-ring").style.setProperty("--progress", `${percent * 3.6}deg`);
   setText("streak-days", progress.totalSeconds > 0 ? 1 : 0);
+}
+
+async function loadVisitorCount() {
+  const isPublicPage = location.hostname.toLowerCase() === "margib.github.io";
+  const shouldIncrement = isPublicPage && localStorage.getItem(visitorCountedKey) !== "yes";
+  const endpoint = shouldIncrement ? `${visitorCounterBaseUrl}/up` : `${visitorCounterBaseUrl}/`;
+
+  try {
+    const response = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error(`Counter returned ${response.status}`);
+    const data = await response.json();
+    const count = Number(data.count);
+    if (!Number.isFinite(count)) throw new Error("Counter returned an invalid value");
+    setText("visitor-count", visitorCountLabel(count));
+    if (shouldIncrement) localStorage.setItem(visitorCountedKey, "yes");
+  } catch {
+    setText("visitor-count", "Wiele osób sprawdziło aplikację");
+  }
+}
+
+function visitorCountLabel(count) {
+  const lastTwo = count % 100;
+  const last = count % 10;
+  const formatted = new Intl.NumberFormat("pl-PL").format(count);
+  if (count === 1) return `${formatted} osoba sprawdziła aplikację`;
+  if (last >= 2 && last <= 4 && !(lastTwo >= 12 && lastTwo <= 14)) return `${formatted} osoby sprawdziły aplikację`;
+  return `${formatted} osób sprawdziło aplikację`;
 }
 
 function tone(frequency, duration) {
