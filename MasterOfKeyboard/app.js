@@ -39,6 +39,30 @@ const tutorialTips = [
   { label: "PŁYNNOŚĆ", title: "Spację naciskaj kciukiem", copy: "Po każdym słowie rozluźnij dłonie, ale palce pozostaw blisko pozycji bazowej.", kind: "rhythm" }
 ];
 
+const interfaceTourSteps = [
+  { view: "practice", selector: ".main-nav", kicker: "NAWIGACJA", title: "Twoja mapa treningu", copy: "Z tego menu przejdziesz do samouczka, lekcji, gier, testu szybkości i raportu postępów." },
+  { view: "practice", selector: "#practice-view .lesson-track", kicker: "LEKCJE", title: "Uczysz się krok po kroku", copy: "Każdy etap dodaje nowe klawisze. Możesz wrócić do wcześniejszej lekcji i poprawić dokładność." },
+  { view: "practice", selector: "#practice-view .typing-card", kicker: "ĆWICZENIE", title: "Patrz na tekst, nie na dłonie", copy: "Aktualny znak jest wyraźnie zaznaczony. Pisz spokojnie, a aplikacja policzy tempo, dokładność i serię." },
+  { view: "practice", selector: "#practice-view .coach-grid", kicker: "PODPOWIEDŹ DŁONI", title: "Wiesz, którego palca użyć", copy: "Podświetlona dłoń i palec pokazują właściwy ruch dla następnego znaku." },
+  { view: "practice", selector: "#practice-view .keyboard-wrap", kicker: "KLAWIATURA EKRANOWA", title: "Klawisz prowadzi Cię kolorem", copy: "Następny klawisz pulsuje, a każdy kolor odpowiada innemu palcowi. Z czasem przestaniesz potrzebować tej podpowiedzi." },
+  { view: "tutorial", selector: "#tutorial-view .tutorial-guide", kicker: "SAMOUCZEK", title: "Najpierw zbuduj dobrą technikę", copy: "Samouczek prowadzi od ułożenia dłoni przez pojedyncze palce aż do pełnych zdań." },
+  { view: "game", selector: "#game-view .game-library", kicker: "SALON GIER", title: "Refleks też może uczyć", copy: "Gry utrwalają położenie klawiszy, rytm, polskie znaki i pamięć palców bez monotonii." },
+  { view: "speed", selector: "#speed-view .speed-layout", kicker: "TEST SZYBKOŚCI", title: "Sprawdzaj postęp, nie ścigaj się", copy: "Test mierzy WPM, liczbę znaków i dokładność. Najpierw celuj w jakość, potem w tempo." },
+  { view: "progress", selector: "#progress-view .progress-hero", kicker: "POSTĘPY", title: "Każdy trening zostawia ślad", copy: "Tu znajdziesz poziom, rekordy, historię sesji i mapę klawiszy, które wymagają więcej ćwiczeń." },
+  { view: "practice", selector: ".guide-menu", kicker: "WRÓĆ W DOWOLNEJ CHWILI", title: "Dwa osobne przewodniki", copy: "Oprowadzanie przypomina funkcje aplikacji, a „Jak pisać?” pokazuje dokładną technikę dłoni i plan codziennego treningu." }
+];
+
+const techniqueSlides = [
+  { kicker: "POZYCJA BAZOWA", title: "Znajdź F i J bez patrzenia", copy: "Wypustki na klawiszach F i J są punktami orientacyjnymi całej klawiatury.", bullets: ["Lewy wskazujący połóż na F, prawy na J.", "Pozostałe palce układają się na ASDF oraz JKL;.", "Nadgarstki trzymaj prosto, a palce lekko zgięte."], visual: "home" },
+  { kicker: "MAPA PALCÓW", title: "Każdy palec ma swój obszar", copy: "Nie szukaj liter całą dłonią. Każdy palec porusza się w swoim pionowym pasie.", bullets: ["Wskazujące obsługują po dwie kolumny.", "Małe palce sięgają także do zewnętrznych klawiszy.", "Po każdym ruchu wracaj na rząd bazowy."], visual: "fingers" },
+  { kicker: "RUCH MIĘDZY RZĘDAMI", title: "Sięgaj palcem, nie nadgarstkiem", copy: "Do górnego i dolnego rzędu wykonuj mały ruch właściwego palca, pozostawiając dłoń spokojną.", bullets: ["Po górnym klawiszu wróć na bazę.", "Do dolnego rzędu sięgaj lekko w dół.", "Gdy zgubisz pozycję, odszukaj wypustki F i J."], visual: "rows" },
+  { kicker: "SPACJA I FUNKCJE", title: "Kciuk pracuje, małe palce pomagają", copy: "Spację naciskaj wygodniejszym kciukiem. Klawisze funkcyjne zwykle należą do małych palców.", bullets: ["Shift naciska przeciwna ręka niż wpisywana litera.", "Enter, Backspace i prawy Shift obsługuje prawy mały palec.", "Tab, Caps Lock i lewy Shift obsługuje lewy mały palec."], visual: "functions" },
+  { kicker: "BEZ PATRZENIA", title: "Zaufaj palcom i ekranowi", copy: "Pisanie bezwzrokowe powstaje z dokładnych powtórzeń, a nie z szybkiego zgadywania.", bullets: ["Patrz na znak oraz podświetlenie na ekranie.", "Możesz na chwilę zasłonić fizyczną klawiaturę.", "Po błędzie zwolnij, popraw pozycję i wróć do rytmu."], visual: "eyes" },
+  { kicker: "ŚCIEŻKA NAUKI", title: "Lekcje stopniowo zdejmują podpórki", copy: "Aplikacja najpierw prowadzi każdy palec, potem łączy ruchy w słowa, zdania i naturalne tempo.", bullets: ["Samouczek uczy techniki pojedynczych palców.", "Lekcje utrwalają rzędy i całe słowa.", "Gry oraz test szybkości sprawdzają odruchy."], visual: "path" },
+  { kicker: "CODZIENNY PLAN", title: "Dziesięć minut wystarczy", copy: "Krótki, regularny trening daje pamięci mięśniowej więcej niż rzadka, długa sesja.", bullets: ["2 minuty: pozycja dłoni i spokojna rozgrzewka.", "5 minut: jedna lekcja z naciskiem na dokładność.", "2 minuty: wybrana gra, 1 minuta: test szybkości."], visual: "plan" },
+  { kicker: "POWÓD DO POWROTU", title: "Zbieraj iskry i buduj serię", copy: "Każdy wpisany znak, ukończony etap i rozegrana sesja powiększają Twój wynik treningowy.", bullets: ["Iskry nagradzają rzeczywistą praktykę.", "Dzienny cel przypomina o krótkiej sesji.", "Poziomy i mapa klawiszy pokazują długofalowy rozwój."], visual: "rewards" }
+];
+
 const speedTexts = [
   "Dobra technika pisania pozwala skupić się na pomysłach zamiast na szukaniu liter. Spokojny rytm i regularny oddech pomagają utrzymać dokładność przez długi czas.",
   "Najlepsze rezultaty pojawiają się dzięki krótkim, regularnym treningom. Palce uczą się drogi do klawiszy, a z czasem każdy ruch staje się naturalny i lekki.",
@@ -84,8 +108,14 @@ let game = freshGameState(false);
 let soundOn = localStorage.getItem("mok-sound") !== "off";
 let audioContext;
 let activeTheme = localStorage.getItem("mok-theme") || "dark";
+let interfaceTourIndex = 0;
+let interfaceTourOpen = false;
+let interfaceTourReturnView = "practice";
+let techniqueSlideIndex = 0;
+let techniqueShowOpen = false;
 const visitorCounterBaseUrl = "https://api.counterapi.dev/v1/master-of-keyboard/unique-users";
 const visitorCountedKey = "mok-public-visitor-counted";
+const interfaceTourSeenKey = "mok-interface-tour-seen";
 
 function loadProgress() {
   try { return { ...defaultProgress, ...JSON.parse(localStorage.getItem("mok-progress") || "{}") }; }
@@ -99,6 +129,7 @@ function saveProgress() {
   }
   localStorage.setItem("mok-progress", JSON.stringify(progress));
   updateDaily();
+  updateRewards();
 }
 
 function freshSession(text) {
@@ -123,9 +154,13 @@ function init() {
   renderProgress();
   bindEvents();
   updateDaily();
+  updateRewards();
   loadVisitorCount();
   syncActiveGuidance();
   document.getElementById("practice-text").focus();
+  if (localStorage.getItem(interfaceTourSeenKey) !== "yes" || new URLSearchParams(location.search).has("intro")) {
+    setTimeout(() => startInterfaceTour(), 550);
+  }
 }
 
 function buildKeyboards() {
@@ -833,6 +868,7 @@ function renderProgress() {
   document.getElementById("progress-message").textContent = progress.completed.length
     ? `Masz ukończone ${progress.completed.length} z ${lessons.length} lekcji. Utrzymaj rytm i wróć jutro.`
     : "Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.";
+  updateRewards();
   renderChart(sessions);
   renderMastery();
 }
@@ -934,6 +970,127 @@ function syncActiveGuidance() {
   highlightFinger(next);
 }
 
+function startInterfaceTour() {
+  if (techniqueShowOpen) closeTechniqueShow();
+  interfaceTourReturnView = activeView;
+  interfaceTourIndex = 0;
+  interfaceTourOpen = true;
+  const tour = document.getElementById("interface-tour");
+  tour.classList.add("open");
+  tour.setAttribute("aria-hidden", "false");
+  document.body.classList.add("tour-active");
+  renderInterfaceTourStep();
+}
+
+function renderInterfaceTourStep() {
+  const step = interfaceTourSteps[interfaceTourIndex];
+  switchView(step.view);
+  setText("tour-step-label", `${interfaceTourIndex + 1} / ${interfaceTourSteps.length}`);
+  setText("tour-kicker", step.kicker);
+  setText("tour-title", step.title);
+  setText("tour-copy", step.copy);
+  document.getElementById("tour-back").disabled = interfaceTourIndex === 0;
+  setText("tour-next", interfaceTourIndex === interfaceTourSteps.length - 1 ? "Zakończ" : "Dalej");
+
+  const sidebarTarget = step.selector === ".main-nav" || step.selector === ".guide-menu";
+  if (window.innerWidth <= 820) document.querySelector(".sidebar").classList.toggle("open", sidebarTarget);
+  requestAnimationFrame(() => {
+    const target = document.querySelector(step.selector);
+    if (!target) return;
+    target.scrollIntoView({ block: "center", inline: "center" });
+    setTimeout(() => positionInterfaceTour(target), 140);
+  });
+}
+
+function positionInterfaceTour(target) {
+  if (!interfaceTourOpen || !target) return;
+  const rect = target.getBoundingClientRect();
+  const gap = 12;
+  const padding = 8;
+  const spotlight = document.getElementById("tour-spotlight");
+  spotlight.style.left = `${Math.max(6, rect.left - padding)}px`;
+  spotlight.style.top = `${Math.max(6, rect.top - padding)}px`;
+  spotlight.style.width = `${Math.min(window.innerWidth - 12, rect.width + padding * 2)}px`;
+  spotlight.style.height = `${Math.min(window.innerHeight - 12, rect.height + padding * 2)}px`;
+
+  const bubble = document.getElementById("tour-bubble");
+  if (window.innerWidth <= 700) {
+    bubble.style.left = "12px";
+    bubble.style.right = "12px";
+    bubble.style.top = "auto";
+    bubble.style.bottom = "12px";
+    return;
+  }
+  bubble.style.right = "auto";
+  bubble.style.bottom = "auto";
+  const bubbleRect = bubble.getBoundingClientRect();
+  let left = rect.right + gap;
+  let top = rect.top;
+  if (left + bubbleRect.width > window.innerWidth - gap) left = rect.left - bubbleRect.width - gap;
+  if (left < gap) {
+    left = Math.min(window.innerWidth - bubbleRect.width - gap, Math.max(gap, rect.left));
+    top = rect.bottom + gap;
+  }
+  if (top + bubbleRect.height > window.innerHeight - gap) top = Math.max(gap, window.innerHeight - bubbleRect.height - gap);
+  bubble.style.left = `${Math.max(gap, left)}px`;
+  bubble.style.top = `${Math.max(gap, top)}px`;
+}
+
+function finishInterfaceTour(skipped = false) {
+  if (!interfaceTourOpen) return;
+  interfaceTourOpen = false;
+  localStorage.setItem(interfaceTourSeenKey, "yes");
+  document.getElementById("interface-tour").classList.remove("open");
+  document.getElementById("interface-tour").setAttribute("aria-hidden", "true");
+  document.body.classList.remove("tour-active");
+  switchView(interfaceTourReturnView);
+  showToast(skipped ? "Intro pominięte. Możesz wrócić do niego z menu." : "Oprowadzanie ukończone. Czas na krótki trening!");
+}
+
+function openTechniqueShow() {
+  if (interfaceTourOpen) finishInterfaceTour(true);
+  document.querySelector(".sidebar").classList.remove("open");
+  techniqueSlideIndex = 0;
+  techniqueShowOpen = true;
+  const show = document.getElementById("technique-show");
+  show.classList.add("open");
+  show.setAttribute("aria-hidden", "false");
+  document.body.classList.add("technique-show-active");
+  renderTechniqueSlide();
+}
+
+function closeTechniqueShow() {
+  techniqueShowOpen = false;
+  const show = document.getElementById("technique-show");
+  show.classList.remove("open");
+  show.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("technique-show-active");
+}
+
+function renderTechniqueSlide() {
+  const slide = techniqueSlides[techniqueSlideIndex];
+  setText("technique-step-label", `${techniqueSlideIndex + 1} / ${techniqueSlides.length}`);
+  setText("technique-slide-kicker", slide.kicker);
+  setText("technique-slide-title", slide.title);
+  setText("technique-slide-copy", slide.copy);
+  document.getElementById("technique-slide-bullets").innerHTML = slide.bullets.map(item => `<li>${item}</li>`).join("");
+  document.getElementById("technique-slide-visual").innerHTML = techniqueVisual(slide.visual);
+  document.getElementById("technique-progress-bar").style.width = `${(techniqueSlideIndex + 1) / techniqueSlides.length * 100}%`;
+  document.getElementById("technique-prev").disabled = techniqueSlideIndex === 0;
+  setText("technique-next", techniqueSlideIndex === techniqueSlides.length - 1 ? "Zacznij trenować" : "Dalej");
+}
+
+function techniqueVisual(kind) {
+  if (kind === "home") return `<div class="demo-hands"><div class="demo-hand left"><i></i><i></i><i></i><i class="anchor"></i></div><div class="demo-hand right"><i class="anchor"></i><i></i><i></i><i></i></div></div><div class="demo-key-row">${["A","S","D","F","J","K","L",";"].map(key => `<kbd class="${"FJ".includes(key) ? "anchor" : ""}">${key}<i></i></kbd>`).join("")}</div><strong class="visual-caption">Wyczuj wypustki F i J</strong>`;
+  if (kind === "fingers") return `<div class="finger-map">${[["Q A Z","mały"],["W S X","serdeczny"],["E D C","środkowy"],["R F V · T G B","wskazujący"],["Y H N · U J M","wskazujący"],["I K ,","środkowy"],["O L .","serdeczny"],["P ; /","mały"]].map(([keys, name], i) => `<div style="--map-color:${fingerGroups[Math.min(i, i < 4 ? i : 7 - i)].color}"><b>${keys}</b><span>${name}</span></div>`).join("")}</div>`;
+  if (kind === "rows") return `<div class="row-reach"><div><span>GÓRNY RZĄD</span><b>Q W E R T Y U I O P</b></div><i>↑ wróć ↓</i><div class="home"><span>BAZA</span><b>A S D F J K L ;</b></div><i>↓ wróć ↑</i><div><span>DOLNY RZĄD</span><b>Z X C V B N M</b></div></div>`;
+  if (kind === "functions") return `<div class="function-keys"><kbd>Tab</kbd><kbd>Shift</kbd><kbd class="space">Spacja<br><small>kciuk</small></kbd><kbd>Enter</kbd><kbd>Backspace</kbd></div><div class="function-arrows"><span>lewy mały palec</span><span>prawy mały palec</span></div>`;
+  if (kind === "eyes") return `<div class="screen-focus"><div class="demo-screen"><i></i><i></i><i></i><b>Patrz tutaj</b></div><div class="no-look"><div class="mini-board"></div><span></span><strong>Nie patrz w dół</strong></div></div>`;
+  if (kind === "path") return `<div class="learning-path">${["Ułożenie dłoni","Pojedyncze palce","Rzędy klawiatury","Słowa i zdania","Gry i tempo"].map((label, i) => `<div><b>${i + 1}</b><span>${label}</span></div>`).join("")}</div>`;
+  if (kind === "plan") return `<div class="daily-plan">${[["2","Pozycja"],["5","Lekcja"],["2","Gra"],["1","Test"]].map(([minutes, label]) => `<div><strong>${minutes}</strong><small>min</small><span>${label}</span></div>`).join("")}</div><strong class="visual-caption">10 minut · najlepiej 5 dni w tygodniu</strong>`;
+  return `<div class="reward-demo"><div class="reward-orb"><span>✦</span><strong id="demo-sparks">${calculateSparks()}</strong><small>iskier treningu</small></div><div class="reward-cards"><div><span>Dzienny cel</span><strong>10 min</strong></div><div><span>Poziom</span><strong>${Math.floor((progress.completed.length * 120 + Math.floor(progress.totalChars / 10)) / 500) + 1}</strong></div><div><span>Seria</span><strong>${progress.totalSeconds > 0 ? 1 : 0} dzień</strong></div></div></div>`;
+}
+
 function switchView(name) {
   if (activeView === "game" && name !== "game" && game.running) {
     stopCurrentGame();
@@ -962,6 +1119,45 @@ function switchView(name) {
 function bindEvents() {
   document.querySelectorAll(".nav-item").forEach(item => item.addEventListener("click", () => switchView(item.dataset.view)));
   document.querySelector(".mobile-menu").addEventListener("click", () => document.querySelector(".sidebar").classList.toggle("open"));
+  document.getElementById("start-interface-tour").addEventListener("click", startInterfaceTour);
+  document.getElementById("start-technique-show").addEventListener("click", openTechniqueShow);
+  document.getElementById("tour-skip").addEventListener("click", () => finishInterfaceTour(true));
+  document.getElementById("tour-back").addEventListener("click", () => {
+    if (interfaceTourIndex > 0) {
+      interfaceTourIndex -= 1;
+      renderInterfaceTourStep();
+    }
+  });
+  document.getElementById("tour-next").addEventListener("click", () => {
+    if (interfaceTourIndex === interfaceTourSteps.length - 1) finishInterfaceTour();
+    else {
+      interfaceTourIndex += 1;
+      renderInterfaceTourStep();
+    }
+  });
+  document.getElementById("technique-show-close").addEventListener("click", closeTechniqueShow);
+  document.getElementById("technique-prev").addEventListener("click", () => {
+    if (techniqueSlideIndex > 0) {
+      techniqueSlideIndex -= 1;
+      renderTechniqueSlide();
+    }
+  });
+  document.getElementById("technique-next").addEventListener("click", () => {
+    if (techniqueSlideIndex === techniqueSlides.length - 1) {
+      closeTechniqueShow();
+      switchView("tutorial");
+      showToast("Zacznij od wypustek F i J. Dokładność jest ważniejsza od tempa.");
+    } else {
+      techniqueSlideIndex += 1;
+      renderTechniqueSlide();
+    }
+  });
+  window.addEventListener("resize", () => {
+    if (interfaceTourOpen) positionInterfaceTour(document.querySelector(interfaceTourSteps[interfaceTourIndex].selector));
+  });
+  window.addEventListener("scroll", () => {
+    if (interfaceTourOpen) positionInterfaceTour(document.querySelector(interfaceTourSteps[interfaceTourIndex].selector));
+  }, { passive: true });
   document.getElementById("lesson-track").addEventListener("click", e => {
     const node = e.target.closest("[data-lesson]");
     if (node) selectLesson(Number(node.dataset.lesson));
@@ -1021,6 +1217,15 @@ function bindEvents() {
     saveProgress(); renderProgress(); buildLessonTrack(); showToast("Wyniki zostały wyczyszczone");
   });
   document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && interfaceTourOpen) {
+      finishInterfaceTour(true);
+      return;
+    }
+    if (event.key === "Escape" && techniqueShowOpen) {
+      closeTechniqueShow();
+      return;
+    }
+    if (interfaceTourOpen || techniqueShowOpen) return;
     if (document.getElementById("result-modal").classList.contains("open")) return;
     if (activeView === "practice") handleTyping(event, practice, "practice");
     else if (activeView === "tutorial") handleTutorial(event);
@@ -1064,6 +1269,15 @@ function updateDaily() {
   setText("daily-percent", `${percent}%`);
   document.querySelector(".daily-ring").style.setProperty("--progress", `${percent * 3.6}deg`);
   setText("streak-days", progress.totalSeconds > 0 ? 1 : 0);
+}
+
+function calculateSparks() {
+  const gameSessions = (progress.sessions || []).filter(session => String(session.type || "").startsWith("Gra")).length;
+  return progress.completed.length * 40 + progress.tutorialCompleted.length * 25 + Math.floor(progress.totalChars / 20) + gameSessions * 15;
+}
+
+function updateRewards() {
+  setText("focus-points", calculateSparks());
 }
 
 async function loadVisitorCount() {

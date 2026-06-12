@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260612-5">
+  <link rel="stylesheet" href="styles.css?v=20260612-6">
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -43,6 +43,17 @@
           <span>Postępy</span>
         </button>
       </nav>
+
+      <div class="guide-menu">
+        <button class="guide-menu-button" id="start-interface-tour">
+          <span class="guide-menu-icon"><svg viewBox="0 0 24 24"><path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5zM13 13h6v6h-6z"/><path d="m9 9 6 6"/></svg></span>
+          <span><strong>Oprowadzanie</strong><small>Poznaj całą aplikację</small></span>
+        </button>
+        <button class="guide-menu-button" id="start-technique-show">
+          <span class="guide-menu-icon"><svg viewBox="0 0 24 24"><path d="M4 18V9a2 2 0 0 1 4 0v5-8a2 2 0 0 1 4 0v8-7a2 2 0 0 1 4 0v7-4a2 2 0 0 1 4 0v5c0 3-2 5-5 5H9c-2 0-3-1-5-2Z"/></svg></span>
+          <span><strong>Jak pisać?</strong><small>Pokaz techniki dłoni</small></span>
+        </button>
+      </div>
 
       <div class="theme-picker">
         <span>Motyw interfejsu</span>
@@ -84,6 +95,7 @@
           <h1>Dzień dobry, Mistrzu</h1>
         </div>
         <div class="top-actions">
+          <div class="spark-pill" title="Iskry zdobywane za regularny trening"><span class="spark-mark">✦</span><strong id="focus-points">0</strong><span>iskier</span></div>
           <div class="streak-pill"><span class="streak-flame">◆</span><strong id="streak-days">1</strong><span>dzień serii</span></div>
           <div class="profile">MK</div>
         </div>
@@ -334,6 +346,40 @@
     </main>
   </div>
 
+  <div class="interface-tour" id="interface-tour" aria-hidden="true">
+    <div class="tour-spotlight" id="tour-spotlight"></div>
+    <article class="tour-bubble" id="tour-bubble" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+      <div class="tour-bubble-head"><span id="tour-step-label">1 / 10</span><button id="tour-skip">Pomiń intro</button></div>
+      <span class="tour-kicker" id="tour-kicker">POZNAJ APLIKACJĘ</span>
+      <h2 id="tour-title">Twoja mapa treningu</h2>
+      <p id="tour-copy"></p>
+      <div class="tour-actions"><button class="ghost-button" id="tour-back">Wstecz</button><button class="primary-button" id="tour-next">Dalej</button></div>
+    </article>
+  </div>
+
+  <div class="technique-show" id="technique-show" aria-hidden="true">
+    <article class="technique-show-card" role="dialog" aria-modal="true" aria-labelledby="technique-slide-title">
+      <button class="technique-show-close" id="technique-show-close" aria-label="Zamknij pokaz">×</button>
+      <div class="technique-show-progress">
+        <span id="technique-step-label">1 / 8</span>
+        <div><i id="technique-progress-bar"></i></div>
+      </div>
+      <div class="technique-slide">
+        <div class="technique-slide-copy">
+          <span class="technique-kicker" id="technique-slide-kicker">POCZĄTEK</span>
+          <h2 id="technique-slide-title">Znajdź F i J bez patrzenia</h2>
+          <p id="technique-slide-copy"></p>
+          <ul id="technique-slide-bullets"></ul>
+        </div>
+        <div class="technique-slide-visual" id="technique-slide-visual"></div>
+      </div>
+      <div class="technique-show-actions">
+        <button class="ghost-button" id="technique-prev">Wstecz</button>
+        <button class="primary-button" id="technique-next">Dalej</button>
+      </div>
+    </article>
+  </div>
+
   <div class="modal-backdrop" id="result-modal" aria-hidden="true">
     <div class="result-modal">
       <button class="modal-close" aria-label="Zamknij">×</button>
@@ -346,6 +392,6 @@
   </div>
   <div class="toast" id="toast"></div>
 
-  <script src="app.js?v=20260612-5"></script>
+  <script src="app.js?v=20260612-6"></script>
 </body>
 </html>
