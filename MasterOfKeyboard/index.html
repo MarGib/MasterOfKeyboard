@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111526">
+  <title>Master of Keyboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Master of Keyboard">
+        <span class="brand-mark"><i>M</i><i>K</i></span>
+        <span class="brand-copy"><strong>Master</strong><small>of Keyboard</small></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Główna nawigacja">
+        <button class="nav-item" data-view="tutorial">
+          <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 4h8v5H8zM5 13h14M7 13v7M12 13v7M17 13v7"/><path d="M10 6h4"/></svg></span>
+          <span>Samouczek</span>
+        </button>
+        <button class="nav-item active" data-view="practice">
+          <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5V6.8c0-.7.5-1.3 1.2-1.4L12 4l6.8 1.4c.7.1 1.2.7 1.2 1.4v12.7l-8-1.7-8 1.7Z"/><path d="M12 4v13.8"/></svg></span>
+          <span>Lekcje</span>
+        </button>
+        <button class="nav-item" data-view="game">
+          <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 8h8a5 5 0 0 1 4.7 6.8l-1.2 3.1a2.5 2.5 0 0 1-4.2.7L13.8 17h-3.6l-1.5 1.6a2.5 2.5 0 0 1-4.2-.7l-1.2-3.1A5 5 0 0 1 8 8Z"/><path d="M7 12v3M5.5 13.5h3M16 12.5h.01M18 14.5h.01"/></svg></span>
+          <span>Gry</span>
+        </button>
+        <button class="nav-item" data-view="speed">
+          <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M5.6 19a9 9 0 1 1 12.8 0"/><path d="m12 13 4-4M8 19h8"/></svg></span>
+          <span>Test szybkości</span>
+        </button>
+        <button class="nav-item" data-view="progress">
+          <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span>
+          <span>Postępy</span>
+        </button>
+      </nav>
+
+      <div class="theme-picker">
+        <span>Motyw interfejsu</span>
+        <div>
+          <button class="active" data-theme="dark" aria-label="Motyw nocny"><i></i>Noc</button>
+          <button data-theme="dusk" aria-label="Motyw zmierzch"><i></i>Zmierzch</button>
+          <button data-theme="light" aria-label="Motyw jasny"><i></i>Jasny</button>
+          <button data-theme="neon" aria-label="Motyw neonowy"><i></i>Neon</button>
+        </div>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-ring"><span id="daily-percent">0%</span></div>
+        <div><strong>Dzienny cel</strong><small><span id="daily-minutes">0</span> z 10 minut</small></div>
+      </div>
+
+      <div class="sidebar-foot">
+        <button class="icon-button sound-toggle" aria-label="Wyłącz dźwięki" aria-pressed="true" title="Wyłącz dźwięki">
+          <svg class="sound-on" viewBox="0 0 24 24"><path d="M5 10v4h4l5 4V6l-5 4H5Z"/><path d="M18 9a4 4 0 0 1 0 6M20 6a8 8 0 0 1 0 12"/></svg>
+          <svg class="sound-off" viewBox="0 0 24 24"><path d="M5 10v4h4l5 4V6l-5 4H5Z"/><path d="m18 10 4 4m0-4-4 4"/></svg>
+        </button>
+        <span id="sound-status">Dźwięki włączone</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" aria-label="Otwórz menu"><span></span><span></span><span></span></button>
+        <div class="welcome">
+          <span class="eyebrow">Twój trening</span>
+          <h1>Dzień dobry, Mistrzu</h1>
+        </div>
+        <div class="top-actions">
+          <div class="streak-pill"><span class="streak-flame">◆</span><strong id="streak-days">1</strong><span>dzień serii</span></div>
+          <div class="profile">MK</div>
+        </div>
+      </header>
+
+      <section class="view active" id="practice-view">
+        <div class="section-heading">
+          <div><span class="eyebrow">Ścieżka nauki</span><h2 id="lesson-title">Rząd podstawowy</h2><p id="lesson-subtitle">Zacznij spokojnie. Palce wracają na klawisze bazowe.</p></div>
+          <button class="ghost-button" id="restart-lesson">Zacznij od nowa</button>
+        </div>
+
+        <div class="lesson-track" id="lesson-track"></div>
+
+        <div class="stats-row">
+          <article class="stat-card coral"><span class="stat-label">Tempo</span><strong><span id="practice-wpm">0</span><small> WPM</small></strong><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i></div></article>
+          <article class="stat-card mint"><span class="stat-label">Dokładność</span><strong><span id="practice-accuracy">100</span><small>%</small></strong><div class="mini-ring"><span></span></div></article>
+          <article class="stat-card lavender"><span class="stat-label">Znaki</span><strong><span id="practice-cpm">0</span><small> / min</small></strong><div class="stat-mark">Aa</div></article>
+          <article class="stat-card gold"><span class="stat-label">Seria bez błędu</span><strong><span id="practice-streak">0</span><small> znaków</small></strong><div class="stat-mark">×<span>1</span></div></article>
+        </div>
+
+        <article class="typing-card">
+          <div class="typing-card-head">
+            <div><span class="status-dot"></span><strong>Ćwiczenie aktywne</strong></div>
+            <div class="progress-copy"><span id="practice-progress-copy">0 / 0</span><div class="thin-progress"><i id="practice-progress"></i></div></div>
+          </div>
+          <div class="typing-text" id="practice-text" tabindex="0" aria-label="Pole ćwiczenia pisania"></div>
+          <div class="next-key-hint">Następny klawisz <kbd id="next-key">A</kbd></div>
+        </article>
+
+        <div class="coach-grid">
+          <article class="coach-card">
+            <div class="card-title"><div><span class="eyebrow">Prawidłowa pozycja</span><h3>Dłonie na rzędzie bazowym</h3></div><span class="live-badge">NA ŻYWO</span></div>
+            <div class="hands">
+              <div class="hand left-hand">
+                <i class="finger pinky"></i><i class="finger ring"></i><i class="finger middle"></i><i class="finger index"></i><i class="finger thumb"></i>
+                <span>Lewa dłoń</span>
+              </div>
+              <div class="home-keys"><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd><span></span><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>;</kbd></div>
+              <div class="hand right-hand">
+                <i class="finger thumb"></i><i class="finger index"></i><i class="finger middle"></i><i class="finger ring"></i><i class="finger pinky"></i>
+                <span>Prawa dłoń</span>
+              </div>
+            </div>
+            <p class="coach-tip"><strong>Wyprostuj nadgarstki.</strong> Wypukłe znaczniki na F i J pomogą znaleźć pozycję bez patrzenia.</p>
+          </article>
+          <article class="finger-card">
+            <span class="eyebrow">Kolory palców</span>
+            <h3>Każdy palec ma swoje klawisze</h3>
+            <div class="finger-legend" id="finger-legend"></div>
+            <p>Kolor podpowiedzi pokaże, którym palcem nacisnąć następny znak.</p>
+          </article>
+        </div>
+
+        <div class="keyboard-wrap">
+          <div class="keyboard-top"><div><span class="eyebrow">Klawiatura ekranowa</span><h3>Nie patrz w dół</h3></div><span class="key-press-label">Wciśnięty: <kbd id="pressed-key">—</kbd></span></div>
+          <div class="keyboard" data-keyboard></div>
+        </div>
+      </section>
+
+      <section class="view" id="tutorial-view">
+        <div class="section-heading tutorial-heading">
+          <div><span class="eyebrow">Od pierwszego ułożenia dłoni</span><h2>Samouczek techniki</h2><p>Przejdziemy razem od pozycji bazowej do pierwszych płynnych fraz.</p></div>
+        </div>
+
+        <div class="tutorial-layout">
+          <aside class="tutorial-path">
+            <div class="tutorial-path-head"><span>Twój kurs</span><strong><span id="tutorial-done-count">0</span> / <span id="tutorial-total-count">12</span></strong></div>
+            <div class="tutorial-heading-actions">
+              <button class="ghost-button danger-button" id="reset-tutorial">Resetuj</button>
+              <button class="ghost-button" id="restart-tutorial">Powtórz</button>
+              <button class="primary-button" id="skip-tutorial-stage">Dalej</button>
+            </div>
+            <div class="tutorial-steps" id="tutorial-steps"></div>
+          </aside>
+
+          <div class="tutorial-main">
+            <article class="tutorial-guide">
+              <div class="tutorial-guide-copy">
+                <span class="tutorial-stage-label" id="tutorial-stage-label">ETAP 1 · FUNDAMENT</span>
+                <h2 id="tutorial-title">Znajdź pozycję bazową</h2>
+                <p id="tutorial-description">Połóż palce na ASDF i JKL;. Wypukłe znaczniki F oraz J pomogą zrobić to bez patrzenia.</p>
+                <div class="tutorial-instruction"><span id="tutorial-instruction-icon">01</span><strong id="tutorial-instruction">Naciśnij wskazywane klawisze właściwymi palcami.</strong></div>
+              </div>
+              <div class="tutorial-tip-banner" id="tutorial-tip-banner">
+                <div class="bump-key-demo"><kbd>F<i></i></kbd><kbd>J<i></i></kbd></div>
+                <div><span id="tutorial-tip-label">NAJWAŻNIEJSZE</span><strong id="tutorial-tip-title">Wyczuj wypustki na F i J</strong><p id="tutorial-tip-copy">To punkty orientacyjne. Pozwalają znaleźć pozycję bazową bez patrzenia na klawiaturę.</p></div>
+              </div>
+              <div class="tutorial-score">
+                <span>Dokładność</span><strong><span id="tutorial-accuracy">100</span>%</strong>
+                <small><span id="tutorial-progress-copy">0 / 8</span> znaków</small>
+              </div>
+            </article>
+
+            <article class="tutorial-hands-card">
+              <div class="tutorial-posture">
+                <span class="eyebrow">Pozycja dłoni</span>
+                <h3 id="tutorial-posture-title">Palce lekko zgięte, nadgarstki proste</h3>
+                <p id="tutorial-posture-copy">Nie opieraj ciężaru dłoni o biurko. Każdy palec pozostaje blisko swojego klawisza.</p>
+              </div>
+              <div class="hands tutorial-hands">
+                <div class="hand left-hand">
+                  <i class="finger pinky"></i><i class="finger ring"></i><i class="finger middle"></i><i class="finger index"></i><i class="finger thumb"></i>
+                  <span>Lewa dłoń</span>
+                </div>
+                <div class="home-keys"><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd><span></span><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>;</kbd></div>
+                <div class="hand right-hand">
+                  <i class="finger thumb"></i><i class="finger index"></i><i class="finger middle"></i><i class="finger ring"></i><i class="finger pinky"></i>
+                  <span>Prawa dłoń</span>
+                </div>
+              </div>
+              <div class="tutorial-check" id="tutorial-check"><i></i><span>Weryfikuję ułożenie po każdym naciśnięciu</span></div>
+            </article>
+
+            <div class="technique-strip">
+              <div><i>1</i><span><strong>Wypustki F i J</strong> odnajdują pozycję bazową</span></div>
+              <div><i>2</i><span><strong>Poruszaj palcami</strong>, nie całą dłonią</span></div>
+              <div><i>3</i><span><strong>Wracaj na ASDF JKL;</strong> po każdym sięgnięciu</span></div>
+              <div><i>4</i><span><strong>Patrz na ekran</strong>, nie na klawiaturę</span></div>
+            </div>
+
+            <article class="tutorial-exercise">
+              <div class="tutorial-target"><span>Następny klawisz</span><kbd id="tutorial-next-key">F</kbd><strong id="tutorial-finger-name">Lewy wskazujący</strong></div>
+              <div class="tutorial-sequence" id="tutorial-sequence" tabindex="0" aria-label="Pole samouczka pisania"></div>
+              <div class="tutorial-feedback" id="tutorial-feedback">Spokojnie. Najpierw dokładność, potem tempo.</div>
+            </article>
+
+            <article class="keyboard-wrap tutorial-keyboard-wrap">
+              <div class="keyboard-top"><div><span class="eyebrow">Prowadzenie palca</span><h3>Podświetlony klawisz czeka na właściwy palec</h3></div><span class="key-press-label">Wciśnięty: <kbd id="tutorial-pressed-key">—</kbd></span></div>
+              <div class="keyboard" data-keyboard></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="tutorial-complete" id="tutorial-complete">
+          <div><span class="result-badge">ETAP ZALICZONY</span><h3 id="tutorial-complete-title">Pozycja bazowa opanowana</h3><p id="tutorial-complete-copy">Dłonie wracają na swoje miejsce bez patrzenia.</p></div>
+          <button class="primary-button" id="next-tutorial-stage">Następny etap</button>
+        </div>
+      </section>
+
+      <section class="view" id="game-view">
+        <div class="section-heading game-heading">
+          <div><span class="eyebrow">Salon gier</span><h2>Deszcz liter</h2><p>Naciśnij literę, zanim jej kafelek przekroczy czerwoną linię.</p></div>
+          <div class="game-hud"><span>Punkty <strong id="game-score">0</strong></span><span>Poziom <strong id="game-level">1</strong></span><span>Seria <strong id="game-combo">0</strong></span><span>Życia <strong id="game-lives">3</strong></span></div>
+        </div>
+        <article class="game-stage" id="game-stage">
+          <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+          <div class="game-grid"></div>
+          <div class="game-dashboard">
+            <div class="speedometer">
+              <div class="speedometer-dial">
+                <i class="speedometer-needle" id="speedometer-needle"></i>
+                <b></b>
+                <span class="speed-zero">0</span><span class="speed-mid">5</span><span class="speed-max">10</span>
+              </div>
+              <div class="speedometer-copy"><span>TEMPO</span><strong id="game-speed">0.3×</strong><small id="game-speed-name">Rozgrzewka</small></div>
+            </div>
+            <div class="level-meter">
+              <div><span>Poziom <strong id="game-level-stage">1</strong></span><small id="game-level-copy">Rząd podstawowy</small></div>
+              <div class="level-progress"><i id="game-level-progress"></i></div>
+              <small id="game-level-hits">0 / 10 trafień</small>
+            </div>
+          </div>
+          <div class="danger-line"><span>linia końcowa</span></div>
+          <div class="level-up-banner" id="level-up-banner"><span>POZIOM</span><strong>2</strong><small>Przyspieszamy!</small></div>
+          <div class="game-overlay" id="game-overlay">
+            <span class="game-kicker">GOTOWY?</span>
+            <h2>Łap litery palcami</h2>
+            <p>Zaczynamy bardzo wolno. Gra dopasuje tempo do Twojej szybkości i dokładności.</p>
+            <button class="primary-button" id="start-game">Rozpocznij grę</button>
+          </div>
+        </article>
+        <div class="game-bottom">
+          <div class="game-hand-guide">
+            <div><span class="eyebrow">Najbliższa litera</span><strong id="game-finger">Czekam na literę</strong></div>
+            <div class="game-hands">
+              <div class="hand left-hand">
+                <i class="finger pinky"></i><i class="finger ring"></i><i class="finger middle"></i><i class="finger index"></i><i class="finger thumb"></i>
+              </div>
+              <div class="hand right-hand">
+                <i class="finger thumb"></i><i class="finger index"></i><i class="finger middle"></i><i class="finger ring"></i><i class="finger pinky"></i>
+              </div>
+            </div>
+          </div>
+          <div class="keyboard compact" data-keyboard></div>
+        </div>
+      </section>
+
+      <section class="view" id="speed-view">
+        <div class="section-heading">
+          <div><span class="eyebrow">Próba czasowa</span><h2>Test szybkości</h2><p>Pisz naturalnie i dokładnie. Wynik obliczymy po zakończeniu czasu.</p></div>
+          <div class="duration-pills"><button class="active" data-duration="30">30 s</button><button data-duration="60">60 s</button><button data-duration="120">2 min</button></div>
+        </div>
+        <div class="speed-layout">
+          <article class="speed-main">
+            <div class="timer-display"><span>Pozostały czas</span><strong id="speed-timer">0:30</strong></div>
+            <div class="typing-text large" id="speed-text" tabindex="0" aria-label="Pole testu szybkości"></div>
+            <div class="speed-result-panel" id="speed-result-panel">
+              <span class="result-badge">PRÓBA UKOŃCZONA</span>
+              <h3 id="speed-result-title">Dobry początek</h3>
+              <p id="speed-result-copy">Każda kolejna próba buduje płynność i pewność na klawiaturze.</p>
+              <div class="speed-result-numbers">
+                <div><strong id="speed-result-wpm">0</strong><span>WPM</span></div>
+                <div><strong id="speed-result-accuracy">0%</strong><span>dokładności</span></div>
+                <div><strong id="speed-result-chars">0</strong><span>znaków</span></div>
+              </div>
+            </div>
+            <div class="speed-actions"><button class="primary-button" id="start-speed">Rozpocznij test</button><span id="speed-action-hint">Zacznij pisać lub kliknij przycisk</span></div>
+          </article>
+          <aside class="speed-stats">
+            <div><span>WPM</span><strong id="speed-wpm">0</strong><small>słów / minutę</small></div>
+            <div><span>CPM</span><strong id="speed-cpm">0</strong><small>znaków / minutę</small></div>
+            <div><span>Dokładność</span><strong><span id="speed-accuracy">100</span>%</strong><small>poprawnych znaków</small></div>
+          </aside>
+        </div>
+        <div class="keyboard-wrap">
+          <div class="keyboard compact speed-keyboard" data-keyboard></div>
+        </div>
+      </section>
+
+      <section class="view" id="progress-view">
+        <div class="section-heading">
+          <div><span class="eyebrow">Twoje osiągnięcia</span><h2>Postępy</h2><p>Regularność wygrywa z pośpiechem. Każda minuta buduje pamięć mięśniową.</p></div>
+          <button class="ghost-button" id="reset-progress">Wyczyść wyniki</button>
+        </div>
+        <div class="progress-hero">
+          <div class="level-orb"><span>POZIOM</span><strong id="profile-level">1</strong><small id="profile-xp">0 XP</small></div>
+          <div><span class="eyebrow">Aktualny cel</span><h2>Pewność na całej klawiaturze</h2><p id="progress-message">Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.</p><div class="xp-bar"><i id="xp-bar"></i></div></div>
+          <div class="best-result"><span>Najlepsze tempo</span><strong><span id="best-wpm">0</span> WPM</strong><small>Twój osobisty rekord</small></div>
+        </div>
+        <div class="report-grid">
+          <article class="report-card wide">
+            <div class="card-title"><div><span class="eyebrow">Ostatnie sesje</span><h3>Tempo i dokładność</h3></div></div>
+            <div class="chart" id="history-chart"></div>
+          </article>
+          <article class="report-card"><span class="eyebrow">Podsumowanie</span><div class="summary-list"><div><span>Ukończone lekcje</span><strong id="completed-lessons">0</strong></div><div><span>Wpisane znaki</span><strong id="total-chars">0</strong></div><div><span>Średnia dokładność</span><strong><span id="avg-accuracy">0</span>%</strong></div><div><span>Czas ćwiczeń</span><strong><span id="total-minutes">0</span> min</strong></div></div></article>
+          <article class="report-card wide"><span class="eyebrow">Opanowanie klawiszy</span><h3>Twoja mapa pewności</h3><div class="mastery-grid" id="mastery-grid"></div></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="result-modal" aria-hidden="true">
+    <div class="result-modal">
+      <button class="modal-close" aria-label="Zamknij">×</button>
+      <span class="result-badge">LEKCJA UKOŃCZONA</span>
+      <h2>Świetna robota!</h2>
+      <p>Twoje palce właśnie zrobiły kolejny krok do pełnej swobody.</p>
+      <div class="result-grid"><div><span>Tempo</span><strong><span id="result-wpm">0</span> WPM</strong></div><div><span>Dokładność</span><strong><span id="result-accuracy">0</span>%</strong></div><div><span>Najlepsza seria</span><strong id="result-streak">0</strong></div></div>
+      <button class="primary-button" id="next-lesson">Następna lekcja</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
