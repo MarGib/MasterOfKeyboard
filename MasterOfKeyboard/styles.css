@@ -505,6 +505,95 @@ body[data-theme="neon"] .tour-spotlight { border-color: #2defff; box-shadow: 0 0
 body[data-theme="neon"] .tour-bubble,
 body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42); background-color: #090b15; box-shadow: 0 25px 80px rgba(0,0,0,.6),0 0 34px rgba(45,239,255,.12); }
 
+/* Readability pass: lift microcopy without changing card and keyboard dimensions. */
+.guide-menu-button strong { font-size: 10px; }
+.guide-menu-button small,
+.community-copy small,
+.community-copy em,
+.tutorial-step small,
+.tutorial-tip-banner span,
+.game-mode-card small,
+.speedometer-copy span,
+.speedometer-copy small,
+.level-meter small,
+.chart-col small { font-size: 7.5px; }
+.theme-picker > span,
+.theme-picker button,
+.community-copy strong,
+.live-badge,
+.tutorial-heading-actions button,
+.tutorial-stage-label,
+.tutorial-tip-banner p,
+.tutorial-score > span,
+.tutorial-score small,
+.tutorial-check,
+.tutorial-target span,
+.tutorial-target strong,
+.tutorial-feedback,
+.game-hud span,
+.speedometer-dial span,
+.level-meter span,
+.danger-line span,
+.level-up-banner span,
+.level-up-banner small,
+.arcade-kicker,
+.speed-result-numbers span,
+.level-orb span,
+.level-orb small,
+.chart-bar::before,
+.result-grid span,
+.finger-map span,
+.row-reach span,
+.function-keys small,
+.function-arrows,
+.daily-plan small { font-size: 8px; }
+.tutorial-path-head,
+.tutorial-step > span,
+.tutorial-step strong,
+.tutorial-instruction,
+.tutorial-instruction span,
+.tutorial-posture p,
+.technique-strip > div,
+.technique-strip i,
+.tutorial-complete p,
+.game-mode-card strong,
+.speed-stats span,
+.speed-stats small,
+.best-result span,
+.best-result small,
+.tour-bubble-head,
+.tour-bubble-head button,
+.tour-kicker,
+.technique-kicker,
+.technique-show-progress,
+.function-keys kbd,
+.daily-plan span,
+.reward-orb small,
+.reward-cards span,
+.result-badge { font-size: 9px; }
+.eyebrow,
+.lesson-node span,
+.lesson-node small,
+.stat-label,
+.stat-card strong small,
+.typing-card-head,
+.next-key-hint,
+.hand span,
+.coach-tip,
+.finger-card p,
+.legend-row,
+.legend-row b,
+.key-press-label,
+.tutorial-guide p,
+.arcade-challenge p,
+.duration-pills button,
+.timer-display,
+.speed-actions,
+.summary-list span,
+.empty-chart,
+.visual-caption,
+.learning-path span { font-size: 10px; }
+
 @media (max-width: 1450px) {
   .game-library { grid-template-columns: repeat(4,minmax(0,1fr)); }
 }
@@ -552,6 +641,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
 }
 
 @media (min-width: 1101px) and (max-height: 850px) {
+  .main-content { padding-bottom: 0; }
   .sidebar { padding-top: 16px; padding-bottom: 14px; }
   .brand { margin-bottom: 13px; }
   .main-nav { gap: 3px; }
@@ -564,7 +654,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   .daily-card { padding: 8px; }
   .community-card { display: none; }
   .sidebar-foot { margin-top: 7px; }
-  .topbar { min-height: 60px; }
+  .topbar { min-height: 54px; }
   .topbar .eyebrow,
   #practice-view .section-heading p,
   #practice-view .finger-card p,
@@ -575,17 +665,17 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #practice-view .lesson-track { padding-bottom: 6px; }
   #practice-view .stat-card { min-height: 62px; padding: 8px 11px; }
   #practice-view .stat-card strong { font-size: 19px; }
-  #practice-view .typing-text { min-height: 90px; padding: 11px 20px; font-size: 18px; }
+  #practice-view .typing-text { min-height: 82px; padding: 9px 20px; font-size: 18px; }
   #practice-view .typing-card-head { padding: 6px 12px; }
   #practice-view .next-key-hint { padding: 5px; }
   #practice-view .coach-card,
-  #practice-view .finger-card { min-height: 119px; padding: 8px 12px; }
-  #practice-view .hands { height: 70px; margin: -12px 0 -14px; transform: scale(.58); }
+  #practice-view .finger-card { min-height: 108px; padding: 7px 12px; }
+  #practice-view .hands { height: 62px; margin: -15px 0 -16px; transform: scale(.54); }
   #practice-view .finger-legend { margin-top: 5px; }
-  #practice-view .keyboard { --key-height: 26px; gap: 3px; max-width: 720px; }
+  #practice-view .keyboard { --key-height: 25px; gap: 3px; max-width: 720px; }
   #practice-view .key-row { gap: 3px; }
-  #practice-view .keyboard-wrap { padding: 8px 12px; }
-  #practice-view .keyboard-top { margin-bottom: 5px; }
+  #practice-view .keyboard-wrap { margin-top: 5px; padding: 5px 12px; }
+  #practice-view .keyboard-top { margin-bottom: 3px; }
   #tutorial-view { padding-top: 6px; }
   #tutorial-view .tutorial-heading { display: none; }
   #tutorial-view .tutorial-main { gap: 6px; }
