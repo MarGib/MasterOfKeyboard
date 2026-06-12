@@ -124,6 +124,7 @@ function init() {
   bindEvents();
   updateDaily();
   loadVisitorCount();
+  syncActiveGuidance();
   document.getElementById("practice-text").focus();
 }
 
@@ -921,6 +922,18 @@ function codeForChar(char) {
   return keyToCode[char] || "";
 }
 
+function syncActiveGuidance() {
+  let next = "";
+  if (activeView === "practice") next = practice.text[practice.index] || "";
+  else if (activeView === "tutorial" && !tutorial.ended) next = tutorial.text[tutorial.index] || "";
+  else if (activeView === "speed" && !speed.ended) next = speed.text[speed.index] || "";
+  else if (activeView === "game" && game.running) {
+    next = currentGameMode().type === "falling" ? game.activeTarget?.char || "" : game.memoryVisible ? "" : game.target[game.index] || "";
+  }
+  highlightExpected(next);
+  highlightFinger(next);
+}
+
 function switchView(name) {
   if (activeView === "game" && name !== "game" && game.running) {
     stopCurrentGame();
@@ -943,6 +956,7 @@ function switchView(name) {
   }
   if (name === "speed") document.getElementById("speed-text").focus();
   if (name === "progress") renderProgress();
+  syncActiveGuidance();
 }
 
 function bindEvents() {
