@@ -610,15 +610,19 @@ function spawnLetter(stage) {
   const char = chars[Math.floor(Math.random() * chars.length)];
   const group = fingerFor(char);
   const el = document.createElement("div");
-  el.className = `fall-key${mode.id === "balloons" ? " balloon-key" : ""}`;
-  el.textContent = char.toUpperCase();
+  const balloon = mode.id === "balloons";
+  el.className = `fall-key${balloon ? " balloon-key" : ""}`;
+  if (balloon) {
+    el.innerHTML = `<span class="balloon-letter">${char.toUpperCase()}</span><i class="balloon-shine"></i><i class="balloon-string"></i>`;
+  } else {
+    el.textContent = char.toUpperCase();
+  }
   const startX = stage.clientWidth > 760 ? 360 : 20;
-  el.style.left = `${startX + Math.random() * Math.max(10, stage.clientWidth - startX - 76)}px`;
+  el.style.left = `${startX + Math.random() * Math.max(10, stage.clientWidth - startX - (balloon ? 96 : 76))}px`;
   el.style.top = "4px";
   el.style.setProperty("--fall-color", group.color);
   stage.appendChild(el);
-  const balloon = mode.id === "balloons";
-  game.items.push({ char, el, y: balloon ? stage.clientHeight - 90 : 0, speed: 1.05 + Math.random() * .2, direction: balloon ? -1 : 1 });
+  game.items.push({ char, el, y: balloon ? stage.clientHeight - 120 : 0, speed: 1.05 + Math.random() * .2, direction: balloon ? -1 : 1 });
 }
 
 function hitGameLetter(key) {
