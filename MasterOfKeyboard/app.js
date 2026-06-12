@@ -499,12 +499,12 @@ const polishChars = "ąćęłńóśźż";
 const arcadeModes = [
   { id: "rain", number: 1, title: "Deszcz liter", short: "Refleks i palce", color: "#64b5f6", description: "Naciśnij literę, zanim jej kafelek przekroczy czerwoną linię.", intro: "Łap litery palcami", instruction: "Zaczynamy bardzo wolno. Gra dopasuje tempo do Twojej szybkości i dokładności.", type: "falling" },
   { id: "balloons", number: 2, title: "Baloniki liter", short: "Celność pod presją", color: "#ff91c8", description: "Przebijaj unoszące się litery, zanim odlecą ponad linię.", intro: "Nie pozwól im odlecieć", instruction: "Najbliższy górnej linii balonik pulsuje. Wciśnij jego literę właściwym palcem.", type: "falling" },
-  { id: "race", number: 4, title: "Wyścig słów", short: "Płynne frazy", color: "#62dbb5", description: "Pisz frazy bez zatrzymywania, aby przesuwać znacznik do mety.", intro: "Dojedź do mety", instruction: "Każdy poprawny znak przesuwa Cię naprzód. Błędy kosztują życie.", type: "target" },
-  { id: "builder", number: 5, title: "Budowniczy słów", short: "Łączenie liter", color: "#f5c96a", description: "Buduj kolejne słowa znak po znaku i utrzymuj serię.", intro: "Zbuduj słowo", instruction: "Pisz podświetlane litery po kolei. Co trzy słowa wejdziesz na wyższy poziom.", type: "target" },
-  { id: "memory", number: 6, title: "Pamięć palców", short: "Pamięć mięśniowa", color: "#9d91ff", description: "Zapamiętaj krótką sekwencję, a potem odtwórz ją bez podpowiedzi.", intro: "Zapamiętaj i odtwórz", instruction: "Sekwencja za chwilę zniknie. Wtedy wpisz ją z pamięci.", type: "target" },
-  { id: "accents", number: 7, title: "Polskie znaki", short: "Ą Ć Ę Ł Ń Ó Ś Ź Ż", color: "#ff7a68", description: "Trenuj polskie znaki i skróty potrzebne do ich wpisywania.", intro: "Oswój polskie znaki", instruction: "Wpisuj wskazane znaki. Na Windows używaj prawego Alt, a na macOS klawisza Option.", type: "target" },
-  { id: "rhythm", number: 8, title: "Rytm klawiatury", short: "Równe tempo", color: "#e8ff47", description: "Utrzymuj serię i wpisuj znaki w pulsującym rytmie.", intro: "Złap równy rytm", instruction: "Nie śpiesz się. Pisz kolejne znaki zgodnie z pulsem planszy.", type: "target", duration: 35 },
-  { id: "marathon", number: 10, title: "Mistrzowski maraton", short: "Wszystkie umiejętności", color: "#ff36c8", description: "Finałowa próba łączy litery, słowa, polskie znaki i presję czasu.", intro: "Pokaż pełną kontrolę", instruction: "Masz 45 sekund i trzy życia. Pisz dokładnie, aby zdobyć jak najwięcej punktów.", type: "target", duration: 45 }
+  { id: "race", number: 3, title: "Wyścig słów", short: "Płynne frazy", color: "#62dbb5", description: "Pisz frazy bez zatrzymywania, aby przesuwać znacznik do mety.", intro: "Dojedź do mety", instruction: "Każdy poprawny znak przesuwa Cię naprzód. Błędy kosztują życie.", type: "target" },
+  { id: "builder", number: 4, title: "Budowniczy słów", short: "Łączenie liter", color: "#f5c96a", description: "Buduj kolejne słowa znak po znaku i utrzymuj serię.", intro: "Zbuduj słowo", instruction: "Pisz podświetlane litery po kolei. Co trzy słowa wejdziesz na wyższy poziom.", type: "target" },
+  { id: "memory", number: 5, title: "Pamięć palców", short: "Pamięć mięśniowa", color: "#9d91ff", description: "Zapamiętaj krótką sekwencję, a potem odtwórz ją bez podpowiedzi.", intro: "Zapamiętaj i odtwórz", instruction: "Sekwencja za chwilę zniknie. Wtedy wpisz ją z pamięci.", type: "target" },
+  { id: "accents", number: 6, title: "Polskie znaki", short: "Ą Ć Ę Ł Ń Ó Ś Ź Ż", color: "#ff7a68", description: "Trenuj polskie znaki i skróty potrzebne do ich wpisywania.", intro: "Oswój polskie znaki", instruction: "Wpisuj wskazane znaki. Na Windows używaj prawego Alt, a na macOS klawisza Option.", type: "target" },
+  { id: "rhythm", number: 7, title: "Rytm klawiatury", short: "Równe tempo", color: "#e8ff47", description: "Utrzymuj serię i wpisuj znaki w pulsującym rytmie.", intro: "Złap równy rytm", instruction: "Nie śpiesz się. Pisz kolejne znaki zgodnie z pulsem planszy.", type: "target", duration: 35 },
+  { id: "marathon", number: 8, title: "Mistrzowski maraton", short: "Wszystkie umiejętności", color: "#ff36c8", description: "Finałowa próba łączy litery, słowa, polskie znaki i presję czasu.", intro: "Pokaż pełną kontrolę", instruction: "Masz 45 sekund i trzy życia. Pisz dokładnie, aby zdobyć jak najwięcej punktów.", type: "target", duration: 45 }
 ];
 
 function currentGameMode() {
@@ -1256,7 +1256,7 @@ function updateSoundControl() {
 }
 
 function applyTheme(theme) {
-  activeTheme = ["dark", "dusk", "light", "neon"].includes(theme) ? theme : "dark";
+  activeTheme = ["dark", "dusk", "neon", "light", "cream", "sky"].includes(theme) ? theme : "dark";
   document.body.dataset.theme = activeTheme;
   localStorage.setItem("mok-theme", activeTheme);
   document.querySelectorAll(".theme-picker [data-theme]").forEach(button => button.classList.toggle("active", button.dataset.theme === activeTheme));
