@@ -18,8 +18,8 @@ const tutorialStages = [
   { group: "Lewa dłoń", title: "Lewy środkowy", description: "Środkowy palec prowadzi kolumnę D, E i C.", instruction: "Sięgaj do E i C, zawsze wracając na D.", posture: "Środkowy palec prowadzi prostą linię", postureCopy: "Nie unoś dłoni. Wystarczy lekki ruch środkowego palca.", text: "d e d c d e c d d e", minAccuracy: 92 },
   { group: "Lewa dłoń", title: "Lewy wskazujący", description: "Wskazujący obsługuje dwie kolumny: F/R/V oraz G/T/B.", instruction: "Ćwicz ruch po przekątnej i odnajduj bazowe F bez patrzenia.", posture: "Wskazujący ma największy obszar lewej dłoni", postureCopy: "Po G, T lub B wracaj na F i wyczuj wypukły znacznik.", text: "f r f v f g t b g f r v", minAccuracy: 92 },
   { group: "Prawa dłoń", title: "Prawy wskazujący", description: "Prawy wskazujący pracuje na J/U/M oraz H/Y/N.", instruction: "Po każdym sięgnięciu odnajdź wypukły znacznik na J.", posture: "J jest kotwicą prawej dłoni", postureCopy: "Poruszaj palcem, nie całą ręką. Pozostałe palce zostają na K, L i ;.", text: "j u j m j h y n h j u m", minAccuracy: 92 },
-  { group: "Prawa dłoń", title: "Prawa dłoń i mały palec", description: "Poznaj kolumny K/I/, oraz L/O/. i ;/P/.", instruction: "Ćwicz trzy zewnętrzne palce prawej dłoni.", posture: "Prawa dłoń pozostaje oparta na JKL;", postureCopy: "Mały palec wykonuje najdłuższe ruchy, więc pracuj spokojnie.", text: "k i k , l o l . ; p ; / k l ;", minAccuracy: 92 },
-  { group: "Ruch dłoni", title: "Sięganie do górnego rzędu", description: "Teraz wszystkie palce sięgają w górę, ale dłonie zawsze wracają na bazę.", instruction: "Po każdej literze z górnego rzędu wróć na klawisz bazowy.", posture: "Baza jest punktem powrotu", postureCopy: "Nie przesuwaj nadgarstków do przodu. Wydłużaj tylko palce.", text: "f r j u d e k i s w l o a q ; p", minAccuracy: 93 },
+  { group: "Prawa dłoń", title: "Prawa dłoń i mały palec", description: "Poznaj kolumny K/I/, oraz L/O/. i ;/P/.", instruction: "Ćwicz trzy zewnętrzne palce prawej dłoni.", posture: "Prawa dłoń pozostaje ustawiona względem JKL;", postureCopy: "Mały palec wykonuje najdłuższe ruchy, więc pracuj spokojnie i nie opieraj ciężaru dłoni na klawiszach.", text: "k i k , l o l . ; p ; / k l ;", minAccuracy: 92 },
+  { group: "Ruch dłoni", title: "Sięganie do górnego rzędu", description: "Właściwy palec sięga w górę, a pozostałe zachowują orientację na bazie.", instruction: "Po każdej literze z górnego rzędu wróć właściwym palcem na klawisz bazowy.", posture: "Baza jest punktem powrotu", postureCopy: "Nie przesuwaj nadgarstków do przodu. Wydłużaj właściwy palec, pozwalając dłoni poruszyć się tylko naturalnie.", text: "f r j u d e k i s w l o a q ; p", minAccuracy: 93 },
   { group: "Ruch dłoni", title: "Sięganie do dolnego rzędu", description: "Palce schodzą do Z–M i natychmiast wracają do pozycji bazowej.", instruction: "Wykonuj małe ruchy w dół bez opuszczania nadgarstków.", posture: "Lekki ruch palców w stronę dolnego rzędu", postureCopy: "Kciuki pozostają nad spacją, a dłonie nie obracają się.", text: "a z s x d c f v j m k , l . ; /", minAccuracy: 93 },
   { group: "Koordynacja", title: "Powrót do F i J", description: "Nauczymy obie dłonie wracać do swoich kotwic po każdym ruchu.", instruction: "Wyczuwaj F i J, a następnie naciskaj wskazywany klawisz.", posture: "F i J ustawiają całą klawiaturę", postureCopy: "Gdy zgubisz pozycję, znajdź wypukłe znaczniki bez patrzenia.", text: "f r f v f t f b j u j m j y j n", minAccuracy: 94 },
   { group: "Pierwsze słowa", title: "Krótkie słowa", description: "Łączymy pracę palców w krótkie słowa z rzędu bazowego i sąsiednich klawiszy.", instruction: "Pisz spokojnie i pozwól każdemu palcowi wracać na miejsce.", posture: "Dłonie spokojne, palce pracują niezależnie", postureCopy: "Po każdym słowie rozluźnij palce i sprawdź pozycję bazową.", text: "sad jak las fala data klasa", minAccuracy: 94 },
@@ -39,6 +39,32 @@ const tutorialTips = [
   { label: "ZGUBIONA POZYCJA?", title: "Nie patrz w dół — znajdź F i J", copy: "Wypustki przywrócą całe ułożenie dłoni szybciej niż szukanie klawiszy wzrokiem.", kind: "bumps" },
   { label: "RYTM", title: "Nie ścigaj się z własnymi palcami", copy: "Najpierw pisz dokładnie. Szybkość przyjdzie sama, gdy ruchy staną się pewne.", kind: "rhythm" },
   { label: "PŁYNNOŚĆ", title: "Spację naciskaj kciukiem", copy: "Po każdym słowie rozluźnij dłonie, ale palce pozostaw blisko pozycji bazowej.", kind: "rhythm" }
+];
+
+const tutorialTheory = [
+  { title: "Pozycja bazowa jest mapą całej klawiatury", principle: "Palce spoczywają lekko na ASDF i JKL;, a wskazujące odnajdują wypustki F i J.", why: "Stały punkt startu skraca drogę do każdego klawisza i pozwala pisać bez patrzenia.", check: ["Palce lekko zgięte, bez wciskania klawiszy ciężarem dłoni.", "Nadgarstki i przedramiona tworzą możliwie prostą linię.", "Barki są rozluźnione, łokcie blisko ciała."], avoid: "Nie opieraj nadgarstków o twardą krawędź podczas aktywnego pisania. Przerwij trening przy bólu, drętwieniu lub mrowieniu." },
+  { title: "Jeden palec sięga, pozostałe zachowują orientację", principle: "Lewy mały palec obsługuje A, Q i Z, po czym wraca na A.", why: "Poruszanie jednym palcem utrzymuje mapę klawiatury pod pozostałymi palcami.", check: ["Q oznacza krótki ruch w górę, Z krótki ruch w dół.", "Pozostałe palce pozostają blisko SDF.", "Ruch jest lekki, bez obracania nadgarstka."], avoid: "Nie przesuwaj całej dłoni do Q lub Z." },
+  { title: "Każdy palec uczy się własnej kolumny", principle: "Lewy serdeczny porusza się między W, S i X.", why: "Stałe przypisanie klawiszy tworzy pamięć mięśniową i ogranicza szukanie liter.", check: ["Po W lub X wróć na S.", "Poruszaj palcem wzdłuż jego naturalnego pasa.", "Naciskaj klawisze krótko i lekko."], avoid: "Nie pomagaj sobie palcem środkowym, nawet jeśli chwilowo wydaje się szybszy." },
+  { title: "Powrót na bazę przygotowuje następny ruch", principle: "Lewy środkowy obsługuje E, D i C, zawsze wracając na D.", why: "Powrót daje pewny start niezależnie od tego, jaki znak pojawi się później.", check: ["Sięgaj do E i C samym palcem.", "Dłoń pozostaje rozluźniona.", "Patrz na ekran, nie na klawiaturę."], avoid: "Nie unoś całej dłoni przy każdym naciśnięciu." },
+  { title: "Wskazujący obsługuje dwie kolumny", principle: "Lewy wskazujący pracuje na F/R/V oraz G/T/B i wraca na wypustkę F.", why: "Wskazujący ma największy naturalny zasięg, ale F pozostaje jego kotwicą.", check: ["Do G, T i B wykonuj mały ruch po przekątnej.", "Po ruchu odnajdź wypustkę F dotykiem.", "Pozostałe palce pozostają blisko ASD."], avoid: "Nie przesuwaj całej lewej dłoni w stronę środka klawiatury." },
+  { title: "J kotwiczy prawą dłoń", principle: "Prawy wskazujący obsługuje J/U/M oraz H/Y/N i wraca na J.", why: "Wypustka J pozwala natychmiast odzyskać pozycję prawej dłoni.", check: ["Po każdym sięgnięciu wyczuj J.", "K, L i ; pozostają blisko swoich pozycji.", "Nie obracaj nadgarstka do N lub M."], avoid: "Nie szukaj J wzrokiem. Odnajduj je dotykiem." },
+  { title: "Zewnętrzne palce pracują spokojniej", principle: "K, L i ; są bazą dla prawego środkowego, serdecznego i małego palca.", why: "Mały palec ma mniejszą siłę i najdłuższy zasięg, dlatego dokładność jest ważniejsza od pośpiechu.", check: ["K obsługuje I i przecinek, L obsługuje O i kropkę.", "Mały palec obsługuje P, średnik, ukośnik i część klawiszy funkcyjnych.", "Po każdym znaku wróć na K, L lub ;."], avoid: "Nie obracaj całej dłoni i nie uderzaj klawiszy małym palcem z dużą siłą." },
+  { title: "Do górnego rzędu sięga właściwy palec", principle: "Nie przesuwaj wszystkich palców w górę. Wydłuż tylko palec przypisany do znaku i wróć na bazę.", why: "Pozostałe palce zachowują orientację, a droga ruchu pozostaje krótka i powtarzalna.", check: ["Strzałka ↑ wskazuje ruch palca, nie całej dłoni.", "Dalszy klawisz może wymagać małego naturalnego ruchu dłoni.", "Nadgarstek pozostaje prosty."], avoid: "Nie przesuwaj wszystkich palców na QWERTY i nie zadzieraj nadgarstków." },
+  { title: "Do dolnego rzędu sięgaj lekko w dół", principle: "Właściwy palec schodzi do Z–M i natychmiast wraca na swój klawisz bazowy.", why: "Stały powrót zapobiega stopniowemu zsuwaniu się dłoni i utracie orientacji.", check: ["Strzałka ↓ wskazuje ruch właściwego palca.", "Kciuki pozostają blisko spacji.", "Dłoń i nadgarstek pozostają rozluźnione."], avoid: "Nie opuszczaj całych dłoni na dolny rząd." },
+  { title: "F i J są sposobem na odzyskanie pozycji", principle: "Gdy zgubisz układ dłoni, zatrzymaj się i znajdź wypustki F oraz J dotykiem.", why: "Krótka korekta pozycji jest szybsza niż dalsze pisanie z błędnym ułożeniem.", check: ["Nie patrz w dół.", "Najpierw odnajdź F i J, potem ułóż pozostałe palce.", "Wznów pisanie dopiero po odzyskaniu komfortu."], avoid: "Nie próbuj ratować pozycji kolejnymi przypadkowymi ruchami." },
+  { title: "Dokładność buduje szybkość", principle: "Pisz w równym tempie, używaj wszystkich palców i pozwalaj im wracać na bazę.", why: "Szybkość pojawia się z powtarzalnych poprawnych ruchów; częste błędy utrwalają złą drogę.", check: ["Najpierw celuj w co najmniej 90–95% dokładności.", "Spację naciskaj wygodniejszym kciukiem.", "Po błędzie popraw znak i wróć do spokojnego rytmu."], avoid: "Nie przyspieszaj kosztem techniki ani nie używaj tylko dwóch najsilniejszych palców." },
+  { title: "Płynność wymaga techniki i ergonomii", principle: "Patrz na ekran, pisz lekko i rób krótkie, regularne treningi zamiast rzadkich maratonów.", why: "Rozluźnione dłonie i neutralna pozycja zmniejszają zmęczenie, a regularność wzmacnia pamięć mięśniową.", check: ["Shift naciskaj ręką przeciwną do wpisywanej wielkiej litery.", "Enter, Backspace, Tab i Shift obsługuj właściwymi małymi palcami.", "Rób przerwy, rozluźniaj barki i zatrzymaj się, gdy pojawia się dyskomfort."], avoid: "Nie patrz stale na klawiaturę, nie zaciskaj dłoni i nie ignoruj bólu." }
+];
+
+const lessonTheory = [
+  { title: "Najpierw zbuduj punkt odniesienia", principle: "ASDF i JKL; są bazą, a F i J pozwalają znaleźć ją bez patrzenia.", why: "Każdy kolejny ruch zaczyna się z przewidywalnego miejsca.", check: ["Lekki dotyk klawiszy.", "Proste nadgarstki.", "Wzrok pozostaje na ekranie."], avoid: "Nie wciskaj klawiszy ciężarem dłoni." },
+  { title: "Lewa dłoń pozostaje zorganizowana", principle: "Każdy palec lewej dłoni obsługuje swój pionowy pas i wraca na ASDF.", why: "Niezależność palców daje dokładność bez szukania liter.", check: ["Poruszaj właściwym palcem.", "Pozostałe palce trzymaj blisko bazy.", "Po błędzie zwolnij."], avoid: "Nie przesuwaj całej dłoni do pojedynczego klawisza." },
+  { title: "Prawa dłoń wraca na JKL;", principle: "Wypustka J ustawia prawą dłoń, a zewnętrzne palce pracują spokojnie.", why: "Stała kotwica ogranicza błędy na P, O, I oraz znakach interpunkcyjnych.", check: ["Wyczuwaj J.", "Nie obracaj nadgarstka.", "Małym palcem naciskaj lekko."], avoid: "Nie szukaj znaków wzrokiem." },
+  { title: "Górny rząd: palec w górę, potem powrót", principle: "Do QWERTY sięga pojedynczy przypisany palec, nie cała dłoń.", why: "Pozostałe palce zachowują mapę klawiatury, a następny ruch jest szybszy.", check: ["Śledź strzałkę ↑.", "Wróć na ASDF JKL;.", "Zachowaj prosty nadgarstek."], avoid: "Nie przenoś wszystkich palców na górny rząd." },
+  { title: "Dolny rząd: krótki ruch w dół", principle: "Do ZXCVBNM sięga właściwy palec i wraca na bazę.", why: "Powrót zapobiega zsuwaniu się dłoni oraz pomyłkom między rzędami.", check: ["Śledź strzałkę ↓.", "Kciuki trzymaj przy spacji.", "Nie opuszczaj nadgarstków."], avoid: "Nie przenoś całych dłoni na dolny rząd." },
+  { title: "Rytm jest ważniejszy od krótkiego zrywu", principle: "Łącz słowa równym, lekkim ruchem i naciskaj spację kciukiem.", why: "Powtarzalny rytm zmniejsza liczbę błędów i dopiero wtedy pozwala zwiększyć WPM.", check: ["Najpierw dokładność.", "Spacja kciukiem.", "Wzrok na tekście."], avoid: "Nie ścigaj się z wynikiem podczas nauki nowych ruchów." },
+  { title: "Modyfikator nie może zabierać orientacji", principle: "Polski znak wpisuj zgodnie ze swoim systemem, po czym zwolnij modyfikator i wróć na bazę.", why: "Kontrolowany skrót zapobiega przypadkowym znakom i utracie pozycji dłoni.", check: ["Sprawdź wybrany system w profilu.", "Naciśnij modyfikator lekko.", "Po znaku wróć na F i J."], avoid: "Nie trzymaj AltGr lub Option dłużej niż potrzeba." },
+  { title: "Wytrzymałość pochodzi z rozluźnienia", principle: "Dłuższy tekst pisz w równym tempie, z prostymi nadgarstkami i rozluźnionymi barkami.", why: "Napięcie szybko pogarsza dokładność i zwiększa zmęczenie.", check: ["Oddychaj spokojnie.", "Rób regularne krótkie przerwy.", "Zatrzymaj się przy bólu lub drętwieniu."], avoid: "Nie zaciskaj palców ani nie próbuj pobić rekordu za wszelką cenę." }
 ];
 
 const interfaceTourSteps = [
@@ -224,6 +250,28 @@ function textMarkup(session) {
   return markup + (word ? `<span class="word">${word}</span>` : "");
 }
 
+function theoryMarkup(theory, extra = "") {
+  return `
+    <div class="theory-principle"><span>ZASADA</span><strong>${escapeHtml(theory.principle)}</strong></div>
+    <div class="theory-why"><span>DLACZEGO TO DZIAŁA</span><p>${escapeHtml(theory.why)}</p></div>
+    <div class="theory-check"><span>SPRAWDŹ TECHNIKĘ</span><ul>${theory.check.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>
+    <div class="theory-avoid"><span>UWAŻAJ</span><p>${escapeHtml(theory.avoid)}</p></div>
+    ${extra ? `<p class="theory-extra">${escapeHtml(extra)}</p>` : ""}`;
+}
+
+function renderLessonTheory() {
+  const theory = lessonTheory[currentLesson];
+  setText("lesson-theory-title", theory.title);
+  const extra = currentLesson === 6 ? platformDetails[progress.profile.platform] || "" : "";
+  document.getElementById("lesson-theory-content").innerHTML = theoryMarkup(theory, extra);
+}
+
+function renderTutorialTheory() {
+  const theory = tutorialTheory[tutorialIndex];
+  setText("tutorial-theory-title", theory.title);
+  document.getElementById("tutorial-theory-content").innerHTML = theoryMarkup(theory);
+}
+
 function renderPractice() {
   const lesson = lessons[currentLesson];
   document.getElementById("lesson-title").textContent = lesson.title;
@@ -238,6 +286,7 @@ function renderPractice() {
   document.getElementById("practice-progress").style.width = `${practice.index / practice.text.length * 100}%`;
   const next = practice.text[practice.index] || "✓";
   setText("next-key", next === " " ? "SPACJA" : next.toUpperCase());
+  renderLessonTheory();
   highlightExpected(next);
   highlightFinger(next);
 }
@@ -268,6 +317,7 @@ function renderTutorial() {
   setText("tutorial-finger-name", group ? fingerNameFor(next) : "Etap ukończony");
   document.getElementById("tutorial-check").classList.toggle("good", tutorial.index > 0 && tutorial.errors === 0);
   document.getElementById("tutorial-feedback").textContent = tutorialFeedback(stage, accuracy);
+  renderTutorialTheory();
   renderTutorialSteps();
   if (activeView === "tutorial") {
     highlightExpected(next === "✓" ? "" : next);
@@ -1014,6 +1064,7 @@ function renderProfile() {
   if (dailySelect) dailySelect.value = String(profile.dailyGoalMinutes || 10);
   setText("profile-guidance", `${goal.guidance} ${platform}`);
   setText("daily-goal-minutes", profile.dailyGoalMinutes || 10);
+  if (currentLesson === 6) renderLessonTheory();
 }
 
 function saveProfile(platform, goal, dailyGoalMinutes) {

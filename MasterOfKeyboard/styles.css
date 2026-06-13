@@ -233,6 +233,25 @@ kbd { font-family: Space Grotesk; }
 .tutorial-posture h3 { font-size: 12px; }.tutorial-posture p { margin: 6px 0 0; color: var(--muted); font-size: 8px; line-height: 1.6; }
 .tutorial-hands { height: 105px; margin: 0; transform: scale(.82); }
 .tutorial-check { display: flex; align-items: center; gap: 7px; padding: 9px; border: 1px solid var(--line); border-radius: 11px; color: var(--muted); font-size: 7px; line-height: 1.5; }.tutorial-check i { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px rgba(245,201,106,.08); }.tutorial-check.good i { background: var(--mint); box-shadow: 0 0 0 4px rgba(98,219,181,.08),0 0 12px rgba(98,219,181,.35); }
+.theory-card { overflow: hidden; border: 1px solid color-mix(in srgb,var(--mint) 24%,var(--line)); border-radius: 14px; background: color-mix(in srgb,var(--panel-2) 88%,var(--mint) 12%); box-shadow: inset 0 1px rgba(255,255,255,.025); }
+.theory-card summary { position: relative; display: grid; grid-template-columns: auto minmax(0,1fr) 22px; gap: 8px; align-items: center; padding: 10px 12px; list-style: none; cursor: pointer; }
+.theory-card summary::-webkit-details-marker { display: none; }
+.theory-card summary::after { content: "+"; display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid color-mix(in srgb,var(--mint) 35%,var(--line)); border-radius: 7px; color: var(--mint); font: 800 14px/1 Space Grotesk; }
+.theory-card[open] summary::after { content: "−"; }
+.theory-card summary span,.theory-card > div span { color: var(--mint); font-size: 8px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.theory-card summary strong { overflow: hidden; color: var(--text); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.theory-card > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; padding: 9px; border-top: 1px solid var(--line); }
+.theory-card > div > div { padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb,var(--panel) 88%,transparent); }
+.theory-card > div span { display: block; margin-bottom: 5px; }
+.theory-card p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.55; }
+.theory-card ul { display: grid; gap: 4px; margin: 0; padding-left: 14px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+.theory-card li::marker { color: var(--mint); }
+.theory-card .theory-principle { grid-column: 1 / -1; border-color: color-mix(in srgb,var(--mint) 30%,var(--line)); background: color-mix(in srgb,var(--mint) 7%,var(--panel)); }
+.theory-card .theory-principle strong { color: var(--text); font-size: 10px; line-height: 1.5; }
+.theory-card .theory-avoid { border-color: color-mix(in srgb,var(--danger) 25%,var(--line)); }
+.theory-card .theory-avoid span { color: var(--danger); }
+.theory-card .theory-extra { grid-column: 1 / -1; padding: 8px 10px; border: 1px solid color-mix(in srgb,var(--gold) 35%,var(--line)); border-radius: 9px; background: color-mix(in srgb,var(--gold) 7%,var(--panel)); color: var(--text); font-weight: 700; }
+.lesson-theory-card { margin-top: 7px; }
 .technique-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }.technique-strip > div { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 7px 9px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.018); color: var(--muted); font-size: 6px; line-height: 1.4; }.technique-strip i { display: grid; place-items: center; width: 19px; height: 19px; flex: 0 0 19px; border-radius: 6px; background: rgba(98,219,181,.08); color: var(--mint); font-size: 7px; font-style: normal; font-weight: 800; }.technique-strip strong { color: var(--text); }
 .tutorial-exercise { display: grid; grid-template-columns: 132px minmax(0,1fr); gap: 12px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(145deg,#181c2e,#111522); }
 .tutorial-target { display: grid; place-content: center; justify-items: center; gap: 4px; padding: 9px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.025); }.tutorial-target span { color: var(--muted); font-size: 7px; }.tutorial-target kbd { display: grid; place-items: center; min-width: 38px; height: 38px; padding: 0 8px; border: 1px solid rgba(245,201,106,.35); border-radius: 10px; background: rgba(245,201,106,.08); color: var(--gold); font-size: 17px; box-shadow: 0 0 20px rgba(245,201,106,.08); }.tutorial-target strong { font-size: 7px; }
@@ -676,6 +695,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #practice-view .finger-card { min-height: 158px; padding: 11px 14px; border-radius: 14px; }
   #practice-view .hands { height: 83px; margin: -4px 0 -4px; transform: scale(.72); transform-origin: center bottom; }
   #practice-view .coach-tip { margin: 7px 0 0; padding: 6px 8px; font-size: 8px; }
+  #practice-view .lesson-theory-card summary { padding: 7px 9px; }
   #practice-view .finger-legend { gap: 4px; margin-top: 8px; }
   #practice-view .legend-row { padding-bottom: 4px; }
   #practice-view .finger-card p { margin-top: 7px; line-height: 1.35; }
@@ -745,6 +765,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #tutorial-view .tutorial-hands-card { min-height: 102px; padding: 4px 13px; border-radius: 14px; }
   #tutorial-view .tutorial-posture p { display: none; }
   #tutorial-view .tutorial-hands { height: 80px; transform: scale(.62); }
+  #tutorial-view .theory-card summary { padding: 7px 9px; }
   #tutorial-view .technique-strip { display: none; }
   #tutorial-view .tutorial-exercise { padding: 7px 10px; border-radius: 14px; }
   #tutorial-view .tutorial-target { padding: 5px; }
@@ -796,6 +817,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   .session-row { grid-template-columns: minmax(130px,1fr) repeat(2,70px); }.session-row .session-duration { display: none; }
   .progress-hero { grid-template-columns: 90px 1fr; }.level-orb { width: 80px; height: 80px; }.best-result { display: none; }
   .tutorial-guide { grid-template-columns: 1fr; }.tutorial-score { display: none; }.tutorial-tip-banner { order: 3; }.tutorial-hands-card { grid-template-columns: 1fr; }.tutorial-posture { display: none; }.tutorial-exercise { grid-template-columns: 100px minmax(0,1fr); }.tutorial-feedback { grid-column: 1 / -1; margin: 0; }.technique-strip { grid-template-columns: repeat(2,1fr); }
+  .theory-card > div { grid-template-columns: 1fr; }.theory-card .theory-principle,.theory-card .theory-extra { grid-column: auto; }
   .technique-show { padding: 12px; overflow-y: auto; }
   .technique-show-card { min-height: calc(100vh - 24px); padding: 24px; }
   .technique-slide { grid-template-columns: 1fr; gap: 22px; align-items: start; padding: 28px 0; }
