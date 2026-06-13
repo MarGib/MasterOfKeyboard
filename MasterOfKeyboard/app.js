@@ -57,7 +57,7 @@ const interfaceTourSteps = [
 const techniqueSlides = [
   { kicker: "POZYCJA BAZOWA", title: "Znajdź F i J bez patrzenia", copy: "Wypustki na klawiszach F i J są punktami orientacyjnymi całej klawiatury.", bullets: ["Lewy wskazujący połóż na F, prawy na J.", "Pozostałe palce układają się na ASDF oraz JKL;.", "Nadgarstki trzymaj prosto, a palce lekko zgięte."], visual: "home" },
   { kicker: "MAPA PALCÓW", title: "Każdy palec ma swój obszar", copy: "Nie szukaj liter całą dłonią. Każdy palec porusza się w swoim pionowym pasie.", bullets: ["Wskazujące obsługują po dwie kolumny.", "Małe palce sięgają także do zewnętrznych klawiszy.", "Po każdym ruchu wracaj na rząd bazowy."], visual: "fingers" },
-  { kicker: "RUCH MIĘDZY RZĘDAMI", title: "Sięgaj palcem, nie nadgarstkiem", copy: "Do górnego i dolnego rzędu wykonuj mały ruch właściwego palca, pozostawiając dłoń spokojną.", bullets: ["Po górnym klawiszu wróć na bazę.", "Do dolnego rzędu sięgaj lekko w dół.", "Gdy zgubisz pozycję, odszukaj wypustki F i J."], visual: "rows" },
+  { kicker: "RUCH MIĘDZY RZĘDAMI", title: "Sięgaj jednym palcem i wracaj na bazę", copy: "Nie przesuwaj wszystkich palców całym rzędem. Właściwy palec wykonuje krótki ruch, a dłoń pozostaje spokojna.", bullets: ["Po każdym klawiszu wróć palcem na ASDF lub JKL;.", "Dalszy klawisz może wymagać małego, naturalnego ruchu dłoni.", "Nadgarstki pozostają proste, a F i J są punktami orientacyjnymi."], visual: "rows" },
   { kicker: "SPACJA I FUNKCJE", title: "Kciuk pracuje, małe palce pomagają", copy: "Spację naciskaj wygodniejszym kciukiem. Klawisze funkcyjne zwykle należą do małych palców.", bullets: ["Shift naciska przeciwna ręka niż wpisywana litera.", "Enter, Backspace i prawy Shift obsługuje prawy mały palec.", "Tab, Caps Lock i lewy Shift obsługuje lewy mały palec."], visual: "functions" },
   { kicker: "BEZ PATRZENIA", title: "Zaufaj palcom i ekranowi", copy: "Pisanie bezwzrokowe powstaje z dokładnych powtórzeń, a nie z szybkiego zgadywania.", bullets: ["Patrz na znak oraz podświetlenie na ekranie.", "Możesz na chwilę zasłonić fizyczną klawiaturę.", "Po błędzie zwolnij, popraw pozycję i wróć do rytmu."], visual: "eyes" },
   { kicker: "ŚCIEŻKA NAUKI", title: "Lekcje stopniowo zdejmują podpórki", copy: "Aplikacja najpierw prowadzi każdy palec, potem łączy ruchy w słowa, zdania i naturalne tempo.", bullets: ["Samouczek uczy techniki pojedynczych palców.", "Lekcje utrwalają rzędy i całe słowa.", "Gry oraz test szybkości sprawdzają odruchy."], visual: "path" },
@@ -1046,8 +1046,20 @@ function closeProfileModal() {
 
 function highlightExpected(char) {
   document.querySelectorAll(".key.expected").forEach(key => key.classList.remove("expected"));
+  document.querySelectorAll(".key-row.target-row").forEach(row => {
+    row.classList.remove("target-row");
+    row.removeAttribute("data-row-direction");
+  });
   const code = codeForChar(char);
-  if (code) document.querySelectorAll(`[data-code="${code}"]`).forEach(key => key.classList.add("expected"));
+  const direction = Core.fingerDirection(char);
+  if (code) document.querySelectorAll(`[data-code="${code}"]`).forEach(key => {
+    key.classList.add("expected");
+    const row = key.closest(".key-row");
+    if (row && direction) {
+      row.classList.add("target-row");
+      row.dataset.rowDirection = direction;
+    }
+  });
 }
 
 function highlightFinger(char) {
@@ -1057,9 +1069,21 @@ function highlightFinger(char) {
     finger.removeAttribute("data-direction");
     finger.removeAttribute("title");
   });
+  document.querySelectorAll(".hands[data-movement]").forEach(hands => {
+    hands.removeAttribute("data-movement");
+    hands.removeAttribute("data-movement-copy");
+  });
   if (!char) return;
   const group = fingerFor(char.toLowerCase());
   const direction = Core.fingerDirection(char);
+  document.querySelectorAll(".hands").forEach(hands => {
+    if (direction) {
+      hands.dataset.movement = direction;
+      hands.dataset.movementCopy = direction === "up"
+        ? "GÓRNY RZĄD · sięgnij tylko wskazanym palcem"
+        : "DOLNY RZĄD · sięgnij tylko wskazanym palcem";
+    }
+  });
   const indexMap = [
     [".left-hand .pinky"], [".left-hand .ring"], [".left-hand .middle"],
     [".left-hand .index", ".right-hand .index"], [".right-hand .middle"], [".right-hand .ring"], [".right-hand .pinky"], [".left-hand .thumb", ".right-hand .thumb"]
