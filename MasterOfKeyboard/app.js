@@ -1,3 +1,5 @@
+const Core = window.MOKCore;
+
 const lessons = [
   { title: "Rząd podstawowy", subtitle: "Zacznij spokojnie. Palce wracają na klawisze bazowe.", label: "ASDF JKL", text: "asdf jkl; asdf jkl; sad fall ask dad; flask salad; jak las; sad jak las" },
   { title: "Lewa ręka", subtitle: "Budujemy precyzję lewej dłoni bez spoglądania w dół.", label: "LEWA", text: "asdf fdsa sad fad das; rasa data; tata stara; teraz fraza staje sie latwa" },
@@ -93,7 +95,19 @@ const keyToCode = {
   "[": "BracketLeft", "]": "BracketRight", "\\": "Backslash", "-": "Minus", "=": "Equal", "`": "Backquote"
 };
 
-const defaultProgress = { completed: [], tutorialCompleted: [], sessions: [], totalChars: 0, totalSeconds: 0, bestWpm: 0, keyHits: {}, keyMisses: {}, day: new Date().toDateString(), dailySeconds: 0 };
+const goalDetails = {
+  start: { title: "Pewność na całej klawiaturze", guidance: "Najpierw utrwal pozycję bazową i dokładne ruchy pojedynczych palców." },
+  accuracy: { title: "Mniej błędów, więcej pewności", guidance: "Skupiaj się na spokojnym rytmie. Rekord liczy się dopiero od 85% dokładności." },
+  speed: { title: "Szybsze, ale nadal dokładne pisanie", guidance: "Kwalifikowany rekord pochodzi z testu szybkości i wymaga co najmniej 85% dokładności." },
+  work: { title: "Sprawniejsze pisanie w pracy", guidance: "Ćwicz pełne słowa, naturalne zdania oraz znaki używane w codziennych dokumentach." },
+  programming: { title: "Płynniejsze pisanie kodu", guidance: "Profil zapisany. Kolejne etapy rozbudują trening cyfr, symboli i skrótów." }
+};
+const platformDetails = {
+  windows: "Windows: polskie znaki wpisuj prawym Alt (AltGr) wraz z literą.",
+  macos: "macOS: polskie znaki wpisuj klawiszem Option wraz z odpowiednim skrótem.",
+  linux: "Linux: polskie znaki najczęściej wpisuj prawym Alt (AltGr) wraz z literą."
+};
+
 let progress = loadProgress();
 let activeView = "practice";
 let currentLesson = Math.min(progress.completed.length, lessons.length - 1);
@@ -118,26 +132,29 @@ const visitorCountedKey = "mok-public-visitor-counted";
 const interfaceTourSeenKey = "mok-interface-tour-seen";
 
 function loadProgress() {
-  try { return { ...defaultProgress, ...JSON.parse(localStorage.getItem("mok-progress") || "{}") }; }
-  catch { return { ...defaultProgress }; }
+  try {
+    const migrated = Core.migrateProgress(JSON.parse(localStorage.getItem("mok-progress") || "{}"));
+    localStorage.setItem("mok-progress", JSON.stringify(migrated));
+    return migrated;
+  }
+  catch { return Core.createDefaultProgress(); }
 }
 
 function saveProgress() {
-  if (progress.day !== new Date().toDateString()) {
-    progress.day = new Date().toDateString();
-    progress.dailySeconds = 0;
-  }
+  progress.version = Core.DATA_VERSION;
+  progress.updatedAt = new Date().toISOString();
+  progress.bestWpm = Core.summarizeSessions(progress.sessions).bestWpm;
   localStorage.setItem("mok-progress", JSON.stringify(progress));
   updateDaily();
   updateRewards();
 }
 
 function freshSession(text) {
-  return { text, index: 0, typed: [], errors: 0, correct: 0, streak: 0, bestStreak: 0, started: 0, ended: false };
+  return { text, index: 0, typed: [], errors: 0, correct: 0, attempts: 0, correctKeystrokes: 0, incorrectKeystrokes: 0, corrections: 0, streak: 0, bestStreak: 0, started: 0, ended: false };
 }
 
 function freshTutorialSession(text) {
-  return { text, index: 0, typed: [], attempts: 0, errors: 0, correct: 0, ended: false };
+  return { text, index: 0, typed: [], attempts: 0, errors: 0, correct: 0, started: 0, ended: false };
 }
 
 function init() {
@@ -155,10 +172,13 @@ function init() {
   bindEvents();
   updateDaily();
   updateRewards();
+  renderProfile();
   loadVisitorCount();
   syncActiveGuidance();
   document.getElementById("practice-text").focus();
-  if (localStorage.getItem(interfaceTourSeenKey) !== "yes" || new URLSearchParams(location.search).has("intro")) {
+  if (!progress.profile.configured) {
+    setTimeout(openProfileModal, 350);
+  } else if (localStorage.getItem(interfaceTourSeenKey) !== "yes" || new URLSearchParams(location.search).has("intro")) {
     setTimeout(() => startInterfaceTour(), 550);
   }
 }
@@ -273,6 +293,7 @@ function tutorialFeedback(stage, accuracy) {
 function handleTutorial(event) {
   if (event.metaKey || event.ctrlKey || event.altKey || tutorial.ended || event.key.length !== 1) return;
   event.preventDefault();
+  if (!tutorial.started) tutorial.started = Date.now();
   const expected = tutorial.text[tutorial.index];
   const correct = event.key === expected || event.key.toLowerCase() === expected.toLowerCase();
   tutorial.attempts++;
@@ -304,9 +325,18 @@ function finishTutorialStage() {
   }
   tutorial.ended = true;
   if (!progress.tutorialCompleted.includes(tutorialIndex)) progress.tutorialCompleted.push(tutorialIndex);
-  progress.totalChars += tutorial.correct;
-  progress.sessions.push({ type: "Samouczek", wpm: 0, accuracy, date: new Date().toISOString() });
-  progress.sessions = progress.sessions.slice(-12);
+  const durationSeconds = Math.max(1, Math.round((Date.now() - tutorial.started) / 1000));
+  recordSession(Core.makeSessionRecord({
+    kind: "tutorial",
+    label: `Samouczek: ${stage.title}`,
+    startedAt: new Date(tutorial.started).toISOString(),
+    durationSeconds,
+    typedChars: tutorial.attempts,
+    correctChars: tutorial.correct,
+    attempts: tutorial.attempts,
+    errors: tutorial.errors,
+    accuracy
+  }), durationSeconds);
   saveProgress();
   renderTutorialSteps();
   setText("tutorial-done-count", progress.tutorialCompleted.length);
@@ -336,12 +366,7 @@ function renderSpeed() {
 }
 
 function sessionMetrics(session) {
-  const elapsed = session.started ? Math.max((Date.now() - session.started) / 60000, 1 / 60) : 0;
-  return {
-    wpm: elapsed ? Math.round((session.correct / 5) / elapsed) : 0,
-    cpm: elapsed ? Math.round(session.correct / elapsed) : 0,
-    accuracy: session.index ? Math.max(0, Math.round(session.correct / session.index * 100)) : 100
-  };
+  return Core.calculateTypingMetrics(session);
 }
 
 function handleTyping(event, session, mode) {
@@ -352,6 +377,7 @@ function handleTyping(event, session, mode) {
       session.index--;
       session.typed.pop();
       session.correct = session.typed.reduce((sum, char, i) => sum + (char === session.text[i] ? 1 : 0), 0);
+      session.corrections++;
       session.streak = 0;
     }
     mode === "practice" ? renderPractice() : renderSpeed();
@@ -365,16 +391,19 @@ function handleTyping(event, session, mode) {
   }
   const expected = session.text[session.index];
   const correct = event.key === expected;
+  session.attempts++;
   session.typed.push(event.key);
   session.index++;
   if (correct) {
     session.correct++;
+    session.correctKeystrokes++;
     session.streak++;
     session.bestStreak = Math.max(session.bestStreak, session.streak);
     progress.keyHits[expected.toLowerCase()] = (progress.keyHits[expected.toLowerCase()] || 0) + 1;
     feedbackSound("correct");
   } else {
     session.errors++;
+    session.incorrectKeystrokes++;
     session.streak = 0;
     progress.keyMisses[expected.toLowerCase()] = (progress.keyMisses[expected.toLowerCase()] || 0) + 1;
     feedbackSound("wrong");
@@ -397,13 +426,21 @@ function finishPractice() {
   practice.ended = true;
   const metrics = sessionMetrics(practice);
   const seconds = Math.max(1, Math.round((Date.now() - practice.started) / 1000));
-  progress.totalChars += practice.index;
-  progress.totalSeconds += seconds;
-  progress.dailySeconds += seconds;
-  progress.bestWpm = Math.max(progress.bestWpm, metrics.wpm);
   if (!progress.completed.includes(currentLesson)) progress.completed.push(currentLesson);
-  progress.sessions.push({ type: "Lekcja", wpm: metrics.wpm, accuracy: metrics.accuracy, date: new Date().toISOString() });
-  progress.sessions = progress.sessions.slice(-12);
+  recordSession(Core.makeSessionRecord({
+    kind: "lesson",
+    label: `Lekcja: ${lessons[currentLesson].title}`,
+    startedAt: new Date(practice.started).toISOString(),
+    durationSeconds: seconds,
+    typedChars: practice.attempts,
+    correctChars: practice.correct,
+    attempts: practice.attempts,
+    errors: practice.incorrectKeystrokes,
+    corrections: practice.corrections,
+    accuracy: metrics.accuracy,
+    wpm: metrics.wpm,
+    cpm: metrics.cpm
+  }), seconds);
   saveProgress();
   setText("result-wpm", metrics.wpm);
   setText("result-accuracy", metrics.accuracy);
@@ -454,12 +491,22 @@ function finishSpeed() {
   speed.ended = true;
   const metrics = sessionMetrics(speed);
   if (!speed.index) metrics.accuracy = 0;
-  progress.totalChars += speed.index;
-  progress.totalSeconds += speedDuration;
-  progress.dailySeconds += speedDuration;
-  progress.bestWpm = Math.max(progress.bestWpm, metrics.wpm);
-  progress.sessions.push({ type: "Test", wpm: metrics.wpm, accuracy: metrics.accuracy, date: new Date().toISOString() });
-  progress.sessions = progress.sessions.slice(-12);
+  if (speed.attempts) {
+    recordSession(Core.makeSessionRecord({
+      kind: "speed-test",
+      label: `Test szybkości · ${speedDuration} s`,
+      startedAt: new Date(speed.started || Date.now()).toISOString(),
+      durationSeconds: speedDuration,
+      typedChars: speed.attempts,
+      correctChars: speed.correct,
+      attempts: speed.attempts,
+      errors: speed.incorrectKeystrokes,
+      corrections: speed.corrections,
+      accuracy: metrics.accuracy,
+      wpm: metrics.wpm,
+      cpm: metrics.cpm
+    }), speedDuration);
+  }
   saveProgress();
   setText("speed-result-wpm", metrics.wpm);
   setText("speed-result-accuracy", `${metrics.accuracy}%`);
@@ -516,7 +563,7 @@ function freshGameState(running = true) {
     running, mode: activeGameMode, score: 0, lives: 3, level: 1, levelHits: 0, hits: 0, misses: 0,
     combo: 0, bestCombo: 0, pace: .32, targetPace: .32, items: [], activeTarget: null, lastSpawn: 0, lastFrame: 0,
     raf: null, timer: null, roundTimer: null, memoryTimer: null, target: "", index: 0, rounds: 0,
-    timeLeft: 0, memoryVisible: false
+    timeLeft: 0, memoryVisible: false, started: running ? Date.now() : 0
   };
 }
 
@@ -740,7 +787,7 @@ function renderArcadeChallenge() {
   setText("arcade-kicker", mode.id === "memory" && game.memoryVisible ? "ZAPAMIĘTAJ SEKWENCJĘ" : mode.id === "race" ? "WYŚCIG DO METY" : mode.duration ? `${game.timeLeft} SEKUND` : `RUNDA ${game.rounds + 1}`);
   const helper = mode.id === "memory"
     ? game.memoryVisible ? "Patrz uważnie. Za chwilę sekwencja zniknie." : "Teraz wpisz całą sekwencję z pamięci."
-    : mode.id === "accents" ? "Windows: prawy Alt + litera · macOS: Option + odpowiedni skrót"
+    : mode.id === "accents" ? platformDetails[progress.profile.platform] || "Wybierz system w profilu treningowym, aby zobaczyć właściwy skrót."
     : mode.id === "rhythm" ? "Utrzymaj równy rytm i nie przerywaj serii."
     : mode.id === "marathon" ? "Litery, słowa i polskie znaki w jednej próbie."
     : mode.instruction;
@@ -820,6 +867,8 @@ function showMistakeBubble(key) {
 }
 
 function endGame() {
+  if (!game.running) return;
+  const endedAt = Date.now();
   stopCurrentGame();
   const mode = currentGameMode();
   const overlay = document.getElementById("game-overlay");
@@ -829,9 +878,23 @@ function endGame() {
   overlay.querySelector("p").textContent = `${mode.title}: poziom ${game.level}, ${game.hits} poprawnych znaków i najlepsza seria ${game.bestCombo}. Jeszcze jedna próba?`;
   document.getElementById("start-game").textContent = "Zagraj ponownie";
   const accuracy = game.hits + game.misses ? Math.round(game.hits / (game.hits + game.misses) * 100) : 0;
-  progress.sessions.push({ type: `Gra: ${mode.title}`, wpm: Math.round(game.score / 10), accuracy, date: new Date().toISOString() });
-  progress.sessions = progress.sessions.slice(-12);
+  const durationSeconds = game.started ? Math.max(1, Math.round((endedAt - game.started) / 1000)) : 0;
+  recordSession(Core.makeSessionRecord({
+    kind: "game",
+    label: `Gra: ${mode.title}`,
+    startedAt: game.started ? new Date(game.started).toISOString() : null,
+    endedAt,
+    durationSeconds,
+    typedChars: game.hits + game.misses,
+    correctChars: game.hits,
+    attempts: game.hits + game.misses,
+    errors: game.misses,
+    accuracy,
+    score: game.score,
+    level: game.level
+  }), durationSeconds);
   saveProgress();
+  renderProgress();
 }
 
 function updateGameHud() {
@@ -856,35 +919,77 @@ function updateSpeedometer() {
   setText("game-speed-name", percent < 18 ? "Rozgrzewka" : percent < 40 ? "Spokojnie" : percent < 65 ? "Dobre tempo" : percent < 85 ? "Szybko" : "Turbo");
 }
 
+function recordSession(session, activitySeconds = 0) {
+  progress.sessions.push(session);
+  progress.totalChars = (progress.totalChars || 0) + session.typedChars;
+  progress.totalCorrectChars = (progress.totalCorrectChars || 0) + session.correctChars;
+  Core.recordActivity(progress, activitySeconds);
+  progress.bestWpm = Core.summarizeSessions(progress.sessions).bestWpm;
+}
+
 function renderProgress() {
   const sessions = progress.sessions || [];
-  const avg = sessions.length ? Math.round(sessions.reduce((sum, s) => sum + s.accuracy, 0) / sessions.length) : 0;
+  const summary = Core.summarizeSessions(sessions);
+  const streak = Core.streakSummary(progress.activityDays);
+  const goal = goalDetails[progress.profile.goal] || goalDetails.start;
   const xp = progress.completed.length * 120 + Math.floor(progress.totalChars / 10);
   const level = Math.floor(xp / 500) + 1;
   setText("profile-level", level);
   setText("profile-xp", `${xp} XP`);
-  setText("best-wpm", progress.bestWpm || 0);
+  setText("best-wpm", summary.bestWpm);
   setText("completed-lessons", progress.completed.length);
-  setText("total-chars", progress.totalChars.toLocaleString("pl-PL"));
-  setText("avg-accuracy", avg);
+  setText("total-chars", (progress.totalCorrectChars || 0).toLocaleString("pl-PL"));
+  setText("avg-accuracy", summary.accuracy);
   setText("total-minutes", Math.round(progress.totalSeconds / 60));
+  setText("total-sessions", summary.totalSessions);
+  setText("longest-streak", streak.longest);
+  setText("progress-goal-title", goal.title);
   document.getElementById("xp-bar").style.width = `${xp % 500 / 5}%`;
   document.getElementById("progress-message").textContent = progress.completed.length
-    ? `Masz ukończone ${progress.completed.length} z ${lessons.length} lekcji. Utrzymaj rytm i wróć jutro.`
-    : "Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.";
+    ? `${goal.guidance} Masz ukończone ${progress.completed.length} z ${lessons.length} lekcji.`
+    : `${goal.guidance} Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.`;
   updateRewards();
-  renderChart(sessions);
+  renderChart(summary.typingSessions);
   renderMastery();
+  renderSessionHistory(sessions);
+  renderProfile();
 }
 
 function renderChart(sessions) {
   const chart = document.getElementById("history-chart");
-  if (!sessions.length) {
-    chart.innerHTML = `<span class="empty-chart">Pierwszy wykres pojawi się po ukończeniu ćwiczenia.</span>`;
+  const typingSessions = sessions.filter(Core.isQualifiedWpmSession);
+  if (!typingSessions.length) {
+    chart.innerHTML = `<span class="empty-chart">Pierwszy wiarygodny wykres pojawi się po ukończeniu testu szybkości z dokładnością co najmniej 85%.</span>`;
     return;
   }
-  const max = Math.max(40, ...sessions.map(s => s.wpm));
-  chart.innerHTML = sessions.slice(-10).map((s, i) => `<div class="chart-col"><i class="chart-bar" data-value="${s.wpm}" style="height:${Math.max(4, s.wpm / max * 100)}%"></i><small>${i + 1}</small></div>`).join("");
+  const visible = typingSessions.slice(-10);
+  const max = Math.max(40, ...visible.map(session => session.wpm));
+  chart.innerHTML = visible.map((session, index) => `<div class="chart-col" title="${escapeHtml(session.label)} · ${session.accuracy}% dokładności"><i class="chart-bar" data-value="${session.wpm}" style="height:${Math.max(4, session.wpm / max * 100)}%"></i><small>${index + 1}</small></div>`).join("");
+}
+
+function renderSessionHistory(sessions) {
+  setText("history-count", `${sessions.length} ${sessions.length === 1 ? "sesja" : "sesji"}`);
+  const history = document.getElementById("session-history");
+  if (!sessions.length) {
+    history.innerHTML = `<span class="empty-chart">Historia pojawi się po pierwszym ukończonym treningu.</span>`;
+    return;
+  }
+  history.innerHTML = [...sessions].reverse().map(session => {
+    const primary = session.kind === "game"
+      ? `${session.score || 0} pkt`
+      : session.kind === "tutorial"
+        ? "Etap"
+        : session.durationSeconds && session.wpm !== null && Number.isFinite(Number(session.wpm))
+          ? `${session.wpm} WPM`
+          : "Archiwum";
+    const date = session.endedAt ? new Intl.DateTimeFormat("pl-PL", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(session.endedAt)) : "Starsza sesja";
+    return `<div class="session-row">
+      <div><strong>${escapeHtml(session.label)}</strong><small>${date}</small></div>
+      <span class="session-metric"><b>${primary}</b><span>wynik</span></span>
+      <span class="session-metric session-accuracy"><b>${session.accuracy}%</b><span>dokładność</span></span>
+      <span class="session-metric session-duration"><b>${formatDuration(session.durationSeconds)}</b><span>czas</span></span>
+    </div>`;
+  }).join("");
 }
 
 function renderMastery() {
@@ -895,6 +1000,48 @@ function renderMastery() {
     const confidence = hits ? Math.max(8, Math.round(hits / (hits + misses) * Math.min(100, hits * 5))) : 0;
     return `<span class="mastery-key" style="--mastery:${confidence}%">${char.toUpperCase()}</span>`;
   }).join("");
+}
+
+function renderProfile() {
+  const profile = progress.profile;
+  const goal = goalDetails[profile.goal] || goalDetails.start;
+  const platform = platformDetails[profile.platform] || "Wybierz system, aby otrzymywać właściwe wskazówki dla znaków specjalnych.";
+  const platformSelect = document.getElementById("profile-platform");
+  const goalSelect = document.getElementById("profile-goal");
+  const dailySelect = document.getElementById("profile-daily-goal");
+  if (platformSelect) platformSelect.value = profile.platform || "windows";
+  if (goalSelect) goalSelect.value = profile.goal || "start";
+  if (dailySelect) dailySelect.value = String(profile.dailyGoalMinutes || 10);
+  setText("profile-guidance", `${goal.guidance} ${platform}`);
+  setText("daily-goal-minutes", profile.dailyGoalMinutes || 10);
+}
+
+function saveProfile(platform, goal, dailyGoalMinutes) {
+  progress.profile = {
+    platform,
+    goal,
+    dailyGoalMinutes: Number(dailyGoalMinutes) || 10,
+    configured: true
+  };
+  saveProgress();
+  renderProfile();
+  renderProgress();
+}
+
+function openProfileModal() {
+  const modal = document.getElementById("profile-modal");
+  document.getElementById("onboarding-platform").value = progress.profile.platform || "windows";
+  document.getElementById("onboarding-goal").value = progress.profile.goal || "start";
+  document.getElementById("onboarding-daily-goal").value = String(progress.profile.dailyGoalMinutes || 10);
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.getElementById("onboarding-platform").focus();
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById("profile-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 function highlightExpected(char) {
@@ -1092,7 +1239,7 @@ function techniqueVisual(kind) {
   if (kind === "eyes") return `<div class="screen-focus"><div class="demo-screen"><i></i><i></i><i></i><b>Patrz tutaj</b></div><div class="no-look"><div class="mini-board"></div><span></span><strong>Nie patrz w dół</strong></div></div>`;
   if (kind === "path") return `<div class="learning-path">${["Ułożenie dłoni","Pojedyncze palce","Rzędy klawiatury","Słowa i zdania","Gry i tempo"].map((label, i) => `<div><b>${i + 1}</b><span>${label}</span></div>`).join("")}</div>`;
   if (kind === "plan") return `<div class="daily-plan">${[["2","Pozycja"],["5","Lekcja"],["2","Gra"],["1","Test"]].map(([minutes, label]) => `<div><strong>${minutes}</strong><small>min</small><span>${label}</span></div>`).join("")}</div><strong class="visual-caption">10 minut · najlepiej 5 dni w tygodniu</strong>`;
-  return `<div class="reward-demo"><div class="reward-orb"><span>✦</span><strong id="demo-sparks">${calculateSparks()}</strong><small>iskier treningu</small></div><div class="reward-cards"><div><span>Dzienny cel</span><strong>10 min</strong></div><div><span>Poziom</span><strong>${Math.floor((progress.completed.length * 120 + Math.floor(progress.totalChars / 10)) / 500) + 1}</strong></div><div><span>Seria</span><strong>${progress.totalSeconds > 0 ? 1 : 0} dzień</strong></div></div></div>`;
+  return `<div class="reward-demo"><div class="reward-orb"><span>✦</span><strong id="demo-sparks">${calculateSparks()}</strong><small>iskier treningu</small></div><div class="reward-cards"><div><span>Dzienny cel</span><strong>${progress.profile.dailyGoalMinutes || 10} min</strong></div><div><span>Poziom</span><strong>${Math.floor((progress.completed.length * 120 + Math.floor(progress.totalChars / 10)) / 500) + 1}</strong></div><div><span>Seria</span><strong>${Core.streakSummary(progress.activityDays).current} dni</strong></div></div></div>`;
 }
 
 function switchView(name) {
@@ -1210,6 +1357,24 @@ function bindEvents() {
     if (soundOn) feedbackSound("correct");
   });
   document.querySelectorAll(".theme-picker [data-theme]").forEach(button => button.addEventListener("click", () => applyTheme(button.dataset.theme)));
+  ["profile-platform", "profile-goal", "profile-daily-goal"].forEach(id => document.getElementById(id).addEventListener("change", () => {
+    saveProfile(
+      document.getElementById("profile-platform").value,
+      document.getElementById("profile-goal").value,
+      document.getElementById("profile-daily-goal").value
+    );
+    showToast("Profil treningowy został zapisany");
+  }));
+  document.getElementById("save-profile").addEventListener("click", () => {
+    saveProfile(
+      document.getElementById("onboarding-platform").value,
+      document.getElementById("onboarding-goal").value,
+      document.getElementById("onboarding-daily-goal").value
+    );
+    closeProfileModal();
+    showToast("Profil gotowy. Zaczynamy trening!");
+    if (localStorage.getItem(interfaceTourSeenKey) !== "yes") setTimeout(startInterfaceTour, 450);
+  });
   document.querySelector(".modal-close").addEventListener("click", closeModal);
   document.getElementById("next-lesson").addEventListener("click", () => {
     closeModal();
@@ -1217,7 +1382,9 @@ function bindEvents() {
   });
   document.getElementById("reset-progress").addEventListener("click", () => {
     if (!confirm("Czy na pewno chcesz usunąć wszystkie zapisane wyniki?")) return;
-    progress = { ...defaultProgress, completed: [], sessions: [], keyHits: {}, keyMisses: {} };
+    const profile = { ...progress.profile };
+    progress = Core.createDefaultProgress();
+    progress.profile = profile;
     saveProgress(); renderProgress(); buildLessonTrack(); showToast("Wyniki zostały wyczyszczone");
   });
   document.addEventListener("keydown", event => {
@@ -1229,7 +1396,7 @@ function bindEvents() {
       closeTechniqueShow();
       return;
     }
-    if (interfaceTourOpen || techniqueShowOpen) return;
+    if (interfaceTourOpen || techniqueShowOpen || document.getElementById("profile-modal").classList.contains("open")) return;
     if (document.getElementById("result-modal").classList.contains("open")) return;
     if (activeView === "practice") handleTyping(event, practice, "practice");
     else if (activeView === "tutorial") handleTutorial(event);
@@ -1267,16 +1434,19 @@ function applyTheme(theme) {
 }
 
 function updateDaily() {
-  const minutes = Math.min(10, Math.floor((progress.dailySeconds || 0) / 60));
-  const percent = Math.min(100, Math.round((progress.dailySeconds || 0) / 600 * 100));
+  const streak = Core.streakSummary(progress.activityDays);
+  const goalMinutes = progress.profile.dailyGoalMinutes || 10;
+  const minutes = Math.floor(streak.todaySeconds / 60);
+  const percent = Math.min(100, Math.round(streak.todaySeconds / (goalMinutes * 60) * 100));
   setText("daily-minutes", minutes);
+  setText("daily-goal-minutes", goalMinutes);
   setText("daily-percent", `${percent}%`);
   document.querySelector(".daily-ring").style.setProperty("--progress", `${percent * 3.6}deg`);
-  setText("streak-days", progress.totalSeconds > 0 ? 1 : 0);
+  setText("streak-days", streak.current);
 }
 
 function calculateSparks() {
-  const gameSessions = (progress.sessions || []).filter(session => String(session.type || "").startsWith("Gra")).length;
+  const gameSessions = (progress.sessions || []).filter(session => session.kind === "game").length;
   return progress.completed.length * 40 + progress.tutorialCompleted.length * 25 + Math.floor(progress.totalChars / 20) + gameSessions * 15;
 }
 
@@ -1364,6 +1534,12 @@ function showToast(message) {
 
 function setText(id, value) { document.getElementById(id).textContent = value; }
 function formatTime(seconds) { return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`; }
+function formatDuration(seconds) {
+  const value = Math.max(0, Number(seconds) || 0);
+  if (!value) return "—";
+  if (value < 60) return `${value} s`;
+  return `${Math.floor(value / 60)} min ${value % 60 ? `${value % 60} s` : ""}`.trim();
+}
 function escapeHtml(char) { return char.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[c]); }
 
 init();

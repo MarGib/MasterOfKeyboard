@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260613-2">
+  <link rel="stylesheet" href="styles.css?v=20260613-3">
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -69,7 +69,7 @@
 
       <div class="daily-card">
         <div class="daily-ring"><span id="daily-percent">0%</span></div>
-        <div><strong>Dzienny cel</strong><small><span id="daily-minutes">0</span> z 10 minut</small></div>
+        <div><strong>Dzienny cel</strong><small><span id="daily-minutes">0</span> z <span id="daily-goal-minutes">10</span> minut</small></div>
       </div>
 
       <a class="community-card" href="https://margib.github.io/MasterOfKeyboard/" target="_blank" rel="noopener" title="Otwórz publiczną wersję Master of Keyboard">
@@ -333,16 +333,26 @@
         </div>
         <div class="progress-hero">
           <div class="level-orb"><span>POZIOM</span><strong id="profile-level">1</strong><small id="profile-xp">0 XP</small></div>
-          <div><span class="eyebrow">Aktualny cel</span><h2>Pewność na całej klawiaturze</h2><p id="progress-message">Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.</p><div class="xp-bar"><i id="xp-bar"></i></div></div>
-          <div class="best-result"><span>Najlepsze tempo</span><strong><span id="best-wpm">0</span> WPM</strong><small>Twój osobisty rekord</small></div>
+          <div><span class="eyebrow">Aktualny cel</span><h2 id="progress-goal-title">Pewność na całej klawiaturze</h2><p id="progress-message">Ukończ pierwszą lekcję, aby zobaczyć swój rozwój.</p><div class="xp-bar"><i id="xp-bar"></i></div></div>
+          <div class="best-result"><span>Najlepsze tempo</span><strong><span id="best-wpm">0</span> WPM</strong><small>Twój kwalifikowany rekord</small></div>
         </div>
+        <article class="profile-settings-card">
+          <div class="card-title"><div><span class="eyebrow">Profil treningowy</span><h3>Ćwicz na swojej klawiaturze i według własnego celu</h3></div><span class="data-version">DANE V2</span></div>
+          <div class="profile-settings-grid">
+            <label>System i klawiatura<select id="profile-platform"><option value="windows">Windows</option><option value="macos">macOS</option><option value="linux">Linux</option></select></label>
+            <label>Główny cel<select id="profile-goal"><option value="start">Nauka od podstaw</option><option value="accuracy">Większa dokładność</option><option value="speed">Większa szybkość</option><option value="work">Sprawniejsze pisanie w pracy</option><option value="programming">Pisanie kodu</option></select></label>
+            <label>Dzienny cel<select id="profile-daily-goal"><option value="5">5 minut</option><option value="10">10 minut</option><option value="15">15 minut</option><option value="20">20 minut</option><option value="30">30 minut</option></select></label>
+          </div>
+          <p id="profile-guidance">Ustawienia wpływają na wskazówki dotyczące znaków specjalnych oraz dzienny cel treningowy.</p>
+        </article>
         <div class="report-grid">
           <article class="report-card wide">
-            <div class="card-title"><div><span class="eyebrow">Ostatnie sesje</span><h3>Tempo i dokładność</h3></div></div>
+            <div class="card-title"><div><span class="eyebrow">Kwalifikowane próby</span><h3>Wyniki testów szybkości</h3></div></div>
             <div class="chart" id="history-chart"></div>
           </article>
-          <article class="report-card"><span class="eyebrow">Podsumowanie</span><div class="summary-list"><div><span>Ukończone lekcje</span><strong id="completed-lessons">0</strong></div><div><span>Wpisane znaki</span><strong id="total-chars">0</strong></div><div><span>Średnia dokładność</span><strong><span id="avg-accuracy">0</span>%</strong></div><div><span>Czas ćwiczeń</span><strong><span id="total-minutes">0</span> min</strong></div></div></article>
-          <article class="report-card wide"><span class="eyebrow">Opanowanie klawiszy</span><h3>Twoja mapa pewności</h3><div class="mastery-grid" id="mastery-grid"></div></article>
+          <article class="report-card"><span class="eyebrow">Podsumowanie</span><div class="summary-list"><div><span>Ukończone lekcje</span><strong id="completed-lessons">0</strong></div><div><span>Poprawne znaki</span><strong id="total-chars">0</strong></div><div><span>Średnia dokładność</span><strong><span id="avg-accuracy">0</span>%</strong></div><div><span>Czas ćwiczeń</span><strong><span id="total-minutes">0</span> min</strong></div><div><span>Wszystkie sesje</span><strong id="total-sessions">0</strong></div><div><span>Najdłuższa seria</span><strong><span id="longest-streak">0</span> dni</strong></div></div></article>
+          <article class="report-card full"><span class="eyebrow">Opanowanie klawiszy</span><h3>Twoja mapa pewności</h3><div class="mastery-grid" id="mastery-grid"></div></article>
+          <article class="report-card full"><div class="card-title"><div><span class="eyebrow">Pełna historia</span><h3>Wszystkie zapisane sesje</h3></div><small id="history-count">0 sesji</small></div><div class="session-history" id="session-history"></div></article>
         </div>
       </section>
     </main>
@@ -392,8 +402,22 @@
       <button class="primary-button" id="next-lesson">Następna lekcja</button>
     </div>
   </div>
+  <div class="modal-backdrop profile-modal-backdrop" id="profile-modal" aria-hidden="true">
+    <div class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
+      <span class="result-badge">TWÓJ PROFIL TRENINGOWY</span>
+      <h2 id="profile-modal-title">Dopasujmy pierwszy trening</h2>
+      <p>Wybierz klawiaturę i najważniejszy cel. Możesz później zmienić te ustawienia w widoku postępów.</p>
+      <div class="profile-modal-fields">
+        <label>System i klawiatura<select id="onboarding-platform"><option value="windows">Windows</option><option value="macos">macOS</option><option value="linux">Linux</option></select></label>
+        <label>Najważniejszy cel<select id="onboarding-goal"><option value="start">Nauka od podstaw</option><option value="accuracy">Większa dokładność</option><option value="speed">Większa szybkość</option><option value="work">Sprawniejsze pisanie w pracy</option><option value="programming">Pisanie kodu</option></select></label>
+        <label>Dzienny cel<select id="onboarding-daily-goal"><option value="5">5 minut</option><option value="10" selected>10 minut</option><option value="15">15 minut</option><option value="20">20 minut</option><option value="30">30 minut</option></select></label>
+      </div>
+      <button class="primary-button" id="save-profile">Rozpocznij trening</button>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
-  <script src="app.js?v=20260613-2"></script>
+  <script src="core.js?v=20260613-3"></script>
+  <script src="app.js?v=20260613-3"></script>
 </body>
 </html>

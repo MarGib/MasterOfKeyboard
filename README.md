@@ -11,8 +11,11 @@ Interaktywna aplikacja wspomagająca naukę pisania bezwzrokowego.
   Budowniczy słów, Pamięć palców, Polskie znaki, Rytm klawiatury
   i Mistrzowski maraton,
 - test szybkości z pomiarem WPM, CPM i dokładności,
-- zapisywanie postępów w przeglądarce,
-- motywy Noc, Zmierzch, Jasny i Neon.
+- wersjonowany zapis pełnej historii treningów w przeglądarce,
+- wiarygodne statystyki WPM, dokładności, poprawek i czasu treningu,
+- prawdziwa seria dni oraz konfigurowalny dzienny cel,
+- profil treningowy uwzględniający Windows, macOS lub Linux,
+- sześć motywów: Noc, Zmierzch, Neon, Jasny, Krem i Niebo.
 
 ## Publiczna wersja
 
@@ -33,6 +36,14 @@ python3 -m http.server 4173 --directory MasterOfKeyboard
 ```
 
 Następnie otwórz `http://localhost:4173`.
+
+## Testy
+
+Statystyki, migracja danych i serie dni mają testy automatyczne:
+
+```bash
+npm test
+```
 
 ## GitHub Pages
 

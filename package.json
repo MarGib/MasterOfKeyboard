@@ -1,0 +1,9 @@
+{
+  "name": "master-of-keyboard",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Interaktywny trener pisania bezwzrokowego",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}
