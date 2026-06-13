@@ -1051,9 +1051,15 @@ function highlightExpected(char) {
 }
 
 function highlightFinger(char) {
-  document.querySelectorAll(".finger.active").forEach(finger => { finger.classList.remove("active"); finger.style.removeProperty("--finger-color"); });
+  document.querySelectorAll(".finger.active, .finger[data-direction]").forEach(finger => {
+    finger.classList.remove("active");
+    finger.style.removeProperty("--finger-color");
+    finger.removeAttribute("data-direction");
+    finger.removeAttribute("title");
+  });
   if (!char) return;
   const group = fingerFor(char.toLowerCase());
+  const direction = Core.fingerDirection(char);
   const indexMap = [
     [".left-hand .pinky"], [".left-hand .ring"], [".left-hand .middle"],
     [".left-hand .index", ".right-hand .index"], [".right-hand .middle"], [".right-hand .ring"], [".right-hand .pinky"], [".left-hand .thumb", ".right-hand .thumb"]
@@ -1068,6 +1074,10 @@ function highlightFinger(char) {
     document.querySelectorAll(selector).forEach(finger => {
       finger.classList.add("active");
       finger.style.setProperty("--finger-color", group.color);
+      if (direction) {
+        finger.dataset.direction = direction;
+        finger.title = direction === "up" ? "Przesuń palec w górę" : "Przesuń palec w dół";
+      }
     });
   });
 }

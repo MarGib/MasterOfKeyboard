@@ -163,6 +163,14 @@ kbd { font-family: Space Grotesk; }
 .right-hand { transform: scaleX(-1); }.right-hand span { transform: scaleX(-1); }
 .finger.active { background: var(--finger-color, var(--gold)); box-shadow: 0 0 20px color-mix(in srgb, var(--finger-color, var(--gold)) 50%, transparent); transform: translateY(-5px); }
 .right-hand .finger.active { transform: translateY(-5px); }
+.finger.active[data-direction]::after { position: absolute; z-index: 8; left: 50%; top: -32px; display: grid; place-items: center; width: 27px; height: 27px; border: 2px solid color-mix(in srgb,var(--finger-color,var(--gold)) 55%,white); border-radius: 9px; background: var(--finger-color,var(--gold)); color: #10151d; font: 900 20px/1 Space Grotesk; box-shadow: 0 0 0 4px color-mix(in srgb,var(--finger-color,var(--gold)) 18%,transparent),0 0 18px color-mix(in srgb,var(--finger-color,var(--gold)) 65%,transparent),inset 0 1px rgba(255,255,255,.45); text-shadow: 0 1px rgba(255,255,255,.45); transform: translateX(-50%); animation: finger-direction-pulse .72s ease-in-out infinite alternate; }
+.finger.active[data-direction="up"]::after { content: "↑"; }
+.finger.active[data-direction="down"]::after { content: "↓"; }
+.right-hand .finger.active[data-direction]::after { transform: translateX(-50%) scaleX(-1); }
+.game-hands .finger.active[data-direction]::after { top: -52px; width: 46px; height: 46px; border-width: 3px; border-radius: 13px; font-size: 34px; }
+@keyframes finger-direction-pulse { from { top: -29px; filter: brightness(.96); } to { top: -35px; filter: brightness(1.16); } }
+.game-hands .finger.active[data-direction]::after { animation-name: game-finger-direction-pulse; }
+@keyframes game-finger-direction-pulse { from { top: -47px; filter: brightness(.96); } to { top: -57px; filter: brightness(1.16); } }
 .home-keys { display: flex; gap: 3px; margin: 0 -5px 9px; z-index: 2; }
 .home-keys kbd { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid var(--line); border-radius: 6px; background: #111522; color: var(--muted); font-size: 8px; }
 .home-keys span { width: 12px; }

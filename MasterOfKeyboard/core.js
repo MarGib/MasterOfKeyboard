@@ -21,6 +21,17 @@
     return Math.min(max, Math.max(min, value));
   }
 
+  function baseKey(char = "") {
+    return String(char).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("ł", "l");
+  }
+
+  function fingerDirection(char = "") {
+    const key = baseKey(char);
+    if ("`1234567890-=qwertyuiop[]\\".includes(key)) return "up";
+    if ("zxcvbnm,./".includes(key)) return "down";
+    return "";
+  }
+
   function dayKey(input = new Date()) {
     const date = input instanceof Date ? input : new Date(input);
     const safeDate = Number.isNaN(date.getTime()) ? new Date() : date;
@@ -248,6 +259,7 @@
     summarizeSessions,
     recordActivity,
     streakSummary,
-    dayKey
+    dayKey,
+    fingerDirection
   };
 });

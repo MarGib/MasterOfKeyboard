@@ -78,3 +78,11 @@ test("records daily activity and total time", () => {
   assert.equal(progress.totalSeconds, 120);
   assert.equal(progress.activityDays["2026-06-13"], 120);
 });
+
+test("detects the finger movement direction for keyboard rows", () => {
+  assert.equal(core.fingerDirection("Q"), "up");
+  assert.equal(core.fingerDirection("Ć"), "down");
+  assert.equal(core.fingerDirection("A"), "");
+  assert.equal(core.fingerDirection("Ł"), "");
+  assert.equal(core.fingerDirection(" "), "");
+});
