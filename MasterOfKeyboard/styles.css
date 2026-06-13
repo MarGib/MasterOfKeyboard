@@ -4,7 +4,7 @@
   --panel-2: #1b2035;
   --line: rgba(255, 255, 255, .09);
   --text: #f7f4ee;
-  --muted: #9fa7bc;
+  --muted: #b0b7c9;
   --coral: #ff7a68;
   --mint: #62dbb5;
   --gold: #f5c96a;
@@ -16,7 +16,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); color: var(--text); font-family: Manrope, sans-serif; overflow-x: hidden; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); color: var(--text); font-family: Manrope, sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 button { color: inherit; font: inherit; }
 button, [tabindex] { outline: none; }
 button:focus-visible, [tabindex]:focus-visible { box-shadow: 0 0 0 3px rgba(98, 219, 181, .35); }
@@ -399,13 +399,13 @@ kbd { font-family: Space Grotesk; }
 
 .modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(5,7,13,.72); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: .2s; }
 .modal-backdrop.open { opacity: 1; visibility: visible; }
-.result-modal { position: relative; width: min(430px, 100%); padding: 34px; border: 1px solid var(--line); border-radius: 23px; background: #171b2d; box-shadow: var(--shadow); text-align: center; transform: translateY(10px); transition: .25s; }.open .result-modal { transform: none; }
-.modal-close { position: absolute; top: 12px; right: 12px; width: 31px; height: 31px; border: 1px solid var(--line); border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; }.result-badge { color: var(--mint); font-size: 8px; font-weight: 800; letter-spacing: .18em; }.result-modal h2 { margin-top: 8px; font-size: 32px; }.result-modal p { color: var(--muted); font-size: 10px; }.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 22px 0; }.result-grid div { display: grid; gap: 5px; padding: 12px 5px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.02); }.result-grid span { color: var(--muted); font-size: 7px; }.result-grid strong { font: 700 15px Space Grotesk; }
+.result-modal { position: relative; width: min(560px, 100%); padding: 44px; border: 1px solid var(--line); border-radius: 26px; background: #171b2d; box-shadow: var(--shadow); text-align: center; transform: translateY(10px); transition: .25s; }.open .result-modal { transform: none; }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 11px; background: transparent; color: var(--muted); cursor: pointer; font-size: 18px; font-weight: 700; }.result-badge { color: var(--mint); font-size: 10px; font-weight: 800; letter-spacing: .18em; }.result-modal h2 { margin-top: 10px; font-size: 42px; }.result-modal p { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 28px 0; }.result-grid div { display: grid; gap: 8px; padding: 18px 8px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.025); }.result-grid .result-label { color: var(--muted); font-size: 11px; font-weight: 600; }.result-grid strong { color: var(--text); font: 700 28px Space Grotesk; }.result-grid strong span { color: inherit; font: inherit; }.result-grid strong small { color: var(--muted); font: 700 16px Space Grotesk; }
 .toast { position: fixed; right: 25px; bottom: 25px; z-index: 110; padding: 11px 15px; border: 1px solid var(--line); border-radius: 10px; background: #22283d; box-shadow: var(--shadow); color: var(--text); font-size: 10px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s; }.toast.show { opacity: 1; transform: none; }
 
 body[data-theme="dusk"] {
   --bg: #171421; --panel: #211c30; --panel-2: #2a243c; --line: rgba(255,255,255,.11);
-  --text: #fbf6f0; --muted: #aaa1ba; --coral: #ff8b78; --mint: #70d8b8; --gold: #f2c86d; --lavender: #b092ff;
+  --text: #fbf6f0; --muted: #bbb2c8; --coral: #ff8b78; --mint: #70d8b8; --gold: #f2c86d; --lavender: #b092ff;
 }
 body[data-theme="dusk"] .sidebar { background: rgba(23,20,33,.94); }
 body[data-theme="dusk"] .typing-card,
@@ -416,17 +416,17 @@ body[data-theme="dusk"] .home-keys kbd { background: #181522; }
 
 body[data-theme="light"] {
   --bg: #f2f0ea; --panel: #fffdf9; --panel-2: #e9ecf1; --line: rgba(38,43,57,.13);
-  --text: #252937; --muted: #777e8e; --coral: #e96555; --mint: #3eaf91; --gold: #d9a83e; --lavender: #7768dc; --blue: #408dcc;
+  --text: #252937; --muted: #626a7a; --coral: #e96555; --mint: #3eaf91; --gold: #d9a83e; --lavender: #7768dc; --blue: #408dcc;
   --danger: #db4055; --shadow: 0 22px 55px rgba(53,55,65,.12);
 }
 body[data-theme="cream"] {
   --bg: #fff4df; --panel: #fffaf0; --panel-2: #f2e3c9; --line: rgba(91,67,39,.15);
-  --text: #3b3025; --muted: #887665; --coral: #df7650; --mint: #55a88b; --gold: #d39b35; --lavender: #8b72c8; --blue: #4e91b8;
+  --text: #3b3025; --muted: #725f4e; --coral: #df7650; --mint: #55a88b; --gold: #d39b35; --lavender: #8b72c8; --blue: #4e91b8;
   --danger: #cf4f56; --shadow: 0 22px 55px rgba(91,67,39,.13);
 }
 body[data-theme="sky"] {
   --bg: #eaf6fb; --panel: #f9fdff; --panel-2: #dcecf4; --line: rgba(37,80,103,.14);
-  --text: #243946; --muted: #6d8490; --coral: #e56e67; --mint: #3ba68e; --gold: #c89c3d; --lavender: #727ed1; --blue: #3b96c2;
+  --text: #243946; --muted: #587583; --coral: #e56e67; --mint: #3ba68e; --gold: #c89c3d; --lavender: #727ed1; --blue: #3b96c2;
   --danger: #d84e61; --shadow: 0 22px 55px rgba(39,84,105,.13);
 }
 :is(body[data-theme="light"],body[data-theme="cream"],body[data-theme="sky"]) .ambient { opacity: .08; }
@@ -464,7 +464,7 @@ body[data-theme="sky"] {
 
 body[data-theme="neon"] {
   --bg: #03040a; --panel: #090b15; --panel-2: #0e1220; --line: rgba(45,239,255,.2);
-  --text: #f5fdff; --muted: #8c9aae; --coral: #ff36c8; --mint: #2defff; --gold: #e8ff47; --lavender: #9a5cff;
+  --text: #f5fdff; --muted: #a7b5c9; --coral: #ff36c8; --mint: #2defff; --gold: #e8ff47; --lavender: #9a5cff;
   --blue: #36a7ff; --danger: #ff3d71; --shadow: 0 24px 70px rgba(0,0,0,.48), 0 0 24px rgba(45,239,255,.035);
 }
 body[data-theme="neon"]::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none; background-image: linear-gradient(rgba(45,239,255,.02) 1px, transparent 1px), linear-gradient(90deg,rgba(45,239,255,.02) 1px,transparent 1px); background-size: 36px 36px; }
@@ -514,7 +514,7 @@ body[data-theme="neon"] .tour-spotlight { border-color: #2defff; box-shadow: 0 0
 body[data-theme="neon"] .tour-bubble,
 body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42); background-color: #090b15; box-shadow: 0 25px 80px rgba(0,0,0,.6),0 0 34px rgba(45,239,255,.12); }
 
-/* Readability pass: lift microcopy without changing card and keyboard dimensions. */
+/* Readability pass: keep supporting text legible without changing card dimensions. */
 .guide-menu-button strong { font-size: 10px; }
 .guide-menu-button small,
 .community-copy small,
@@ -525,7 +525,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
 .speedometer-copy span,
 .speedometer-copy small,
 .level-meter small,
-.chart-col small { font-size: 7.5px; }
+.chart-col small { font-size: 9px; }
 .theme-picker > span,
 .theme-picker button,
 .community-copy strong,
@@ -555,7 +555,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
 .row-reach span,
 .function-keys small,
 .function-arrows,
-.daily-plan small { font-size: 8px; }
+.daily-plan small { font-size: 9px; }
 .tutorial-path-head,
 .tutorial-step > span,
 .tutorial-step strong,
@@ -579,7 +579,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
 .daily-plan span,
 .reward-orb small,
 .reward-cards span,
-.result-badge { font-size: 9px; }
+.result-badge { font-size: 10px; }
 .eyebrow,
 .lesson-node span,
 .lesson-node small,
@@ -601,7 +601,20 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
 .summary-list span,
 .empty-chart,
 .visual-caption,
-.learning-path span { font-size: 10px; }
+.learning-path span { font-size: 11px; }
+.community-copy strong,
+.guide-menu-button small,
+.tutorial-step small,
+.game-mode-card small,
+.chart-col small { line-height: 1.35; }
+.game-mode-card strong,
+.tutorial-step strong,
+.summary-list strong,
+.reward-cards strong { font-weight: 700; }
+.key { font-size: 10px; }
+.keyboard.compact .key,
+.tutorial-keyboard-wrap .key,
+#game-view .game-bottom .key { font-size: 9px; }
 
 @media (max-width: 1450px) {
   .game-library { grid-template-columns: repeat(4,minmax(0,1fr)); }
@@ -640,7 +653,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #practice-view .keyboard-top { margin-bottom: 7px; }
   #practice-view .keyboard { --key-height: 30px; gap: 4px; min-width: 640px; max-width: 790px; }
   #practice-view .key-row { gap: 4px; }
-  #practice-view .key { min-width: 34px; padding: 0 6px; border-radius: 7px; font-size: 8px; }
+  #practice-view .key { min-width: 34px; padding: 0 6px; border-radius: 7px; font-size: 9px; }
   #practice-view .key-space { width: 255px; }
   #practice-view .key-tab { width: 55px; }
   #practice-view .key-caps { width: 64px; }
@@ -709,7 +722,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #tutorial-view .tutorial-keyboard-wrap .keyboard-top { margin-bottom: 4px; }
   #tutorial-view .tutorial-keyboard-wrap .keyboard { --key-height: 24px; gap: 3px; max-width: 700px; }
   #tutorial-view .tutorial-keyboard-wrap .key-row { gap: 3px; }
-  #tutorial-view .tutorial-keyboard-wrap .key { min-width: 30px; font-size: 7px; }
+  #tutorial-view .tutorial-keyboard-wrap .key { min-width: 30px; font-size: 9px; }
   #tutorial-view .tutorial-keyboard-wrap .key-space { width: 225px; }
   #game-view { padding-top: 7px; }
   #game-view .game-heading { margin-bottom: 8px; }
@@ -722,7 +735,7 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   #game-view .game-bottom { gap: 8px; margin-top: 7px; padding: 6px 12px; border-radius: 14px; }
   #game-view .game-bottom .keyboard { --key-height: 24px; gap: 3px; max-width: 690px; }
   #game-view .game-bottom .key-row { gap: 3px; }
-  #game-view .game-bottom .key { min-width: 29px; font-size: 7px; }
+  #game-view .game-bottom .key { min-width: 29px; font-size: 9px; }
   #game-view .game-bottom .key-space { width: 220px; }
 }
 
@@ -770,6 +783,11 @@ body[data-theme="neon"] .technique-show-card { border-color: rgba(45,239,255,.42
   .speed-stats { gap: 6px; }.speed-stats small { display: none; }
   .progress-hero { grid-template-columns: 1fr; }.level-orb { display: none; }
   .result-grid { grid-template-columns: 1fr; }
+  .result-modal { padding: 34px 22px 24px; }
+  .result-modal h2 { font-size: 32px; }
+  .result-modal p { font-size: 12px; }
+  .result-grid { gap: 7px; margin: 20px 0; }
+  .result-grid div { padding: 12px; }
   .tutorial-heading .ghost-button { display: none; }.tutorial-hands-card { display: none; }.tutorial-exercise { grid-template-columns: 1fr; }.tutorial-target { grid-template-columns: auto auto 1fr; justify-items: start; }.tutorial-sequence { min-height: 120px; }.tutorial-complete { right: 12px; bottom: 12px; left: 12px; }.technique-strip { grid-template-columns: 1fr; }
   .tour-bubble { padding: 18px; }
   .tour-bubble h2 { font-size: 21px; }
