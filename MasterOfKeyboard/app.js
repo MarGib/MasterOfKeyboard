@@ -167,7 +167,7 @@ function buildKeyboards() {
   document.querySelectorAll("[data-keyboard]").forEach(board => {
     board.innerHTML = rows.map(row => `<div class="key-row">${row.map(([label, code, cls = ""]) => {
       const color = fingerFor(label.length === 1 ? label.toLowerCase() : label === "Spacja" ? " " : "").color;
-      return `<span class="key ${cls}" data-code="${code}" data-color="${color}" style="--key-color:${color}">${label}</span>`;
+      return `<span class="key ${cls}" data-code="${code}" data-color="${color}" style="--key-color:${color}"><span class="key-label">${label}</span></span>`;
     }).join("")}</div>`).join("");
   });
 }
